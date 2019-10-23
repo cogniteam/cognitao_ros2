@@ -6,34 +6,31 @@
 
 
 void callback(const dm_ros2::msg::EventMsg::SharedPtr msg) {
-
 	cout<<" inside callback "<<endl; 
 	WM::setVar(msg->key, msg->value);
 }
+
 class RosDataSource:  public MapThreadSafeDataSource {
 
 public:
-  RosDataSource(){	
+  RosDataSource(int argc, char **argv){	
 
-	g_node = rclcpp::Node::make_shared("dm_ros_2");
-  
-
-  
-	event_pub_ 
-		= g_node->create_publisher<dm_ros2::msg::EventMsg>("/wme/out", 1000);
-
+		rclcpp::init(argc, argv);
 	
-	event_sub_ = g_node->create_subscription<dm_ros2::msg::EventMsg>
-      ("/wme/in", callback);
+		g_node = rclcpp::Node::make_shared("dm_ros_2");
 	
+		event_pub_ 
+			= g_node->create_publisher<dm_ros2::msg::EventMsg>("/wme/out", 1000);
+		
+		event_sub_ = g_node->create_subscription<dm_ros2::msg::EventMsg>
+		("/wme/in", callback);	
 
-	spinTHread_ = std::thread(&RosDataSource::doSpin, this);
-	spinTHread_.detach();	
-
-
-  }
+		spinTHread_ = std::thread(&RosDataSource::doSpin, this);
+		spinTHread_.detach();	
+    }
 
    ~RosDataSource(){
+	    rclcpp::shutdown();
     }
 
     
@@ -66,7 +63,6 @@ public:
 		eventMsg.value = value;
 		cout<<"publish msg "<<variable<<", "<<value<<endl;
 		event_pub_->publish(eventMsg);
-
 	}
 	
 
@@ -84,7 +80,6 @@ private:
 	std::thread spinTHread_;
 
 	rclcpp::Node::SharedPtr g_node = nullptr;
-
 
 };
 

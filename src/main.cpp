@@ -11,11 +11,10 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-	rclcpp::init(argc, argv);
 
   	std::cout<<"node running"<<std::endl;
     
-	WM::init(new RosDataSource());
+	WM::init(new RosDataSource(argc, argv));
 
 
 	UILink link_("/home/maytronics/dm_ros2_ws/src/cognitao.git/www","127.0.0.1",1234);
@@ -51,7 +50,6 @@ int main(int argc, char **argv) {
   	std::this_thread::sleep_for(std::chrono::seconds(120));
 	m.stop();
 	link_.stop();
-  	rclcpp::shutdown();
 
   
   	return 0;
