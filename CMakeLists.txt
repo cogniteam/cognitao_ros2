@@ -46,7 +46,7 @@ install(TARGETS
 
 include_directories(
 	include
-	../dm/include/
+	../cognitao.git/include/
   )
 
 if(BUILD_TESTING)

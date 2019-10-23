@@ -8,31 +8,30 @@ class RosDataSource: public rclcpp::Node, public MapThreadSafeDataSource {
 
 public:
   RosDataSource()
-  : Node("dm_ros_2"){
+  : Node("dm_ros_2"){	
+  
+	event_pub_ 
+		= this->create_publisher<dm_ros2::msg::EventMsg>("/wme/out", 1000);		
 
+	event_sub_ = this->create_subscription<dm_ros2::msg::EventMsg>(
+		"/wme/in", std::bind(&RosDataSource::callback, this, std::placeholders::_1));
 
-		event_pub_ 
-		 	= this->create_publisher<dm_ros2::msg::EventMsg>("/wme/out", 1000);		
+	spinTHread_ = std::thread(&RosDataSource::doSpin, this);
+	spinTHread_.detach();	
 
-		event_sub_ = this->create_subscription<dm_ros2::msg::EventMsg>(
-			"/wme/in", std::bind(&RosDataSource::callback, this, std::placeholders::_1));
-
-		spinTHread_ = std::thread(&RosDataSource::doSpin, this);
-		spinTHread_.detach();		
 
   }
 
   ~RosDataSource(){
-  }
+   }
 
-  void callback(const dm_ros2::msg::EventMsg::SharedPtr msg) {
-	  cout<<"inside callllllback "<<endl;
+    void callback(const dm_ros2::msg::EventMsg::SharedPtr msg) {
 	  WM::setVar(msg->key, msg->value);
 	}
 
   
 
-  virtual void setVar(std::string variable,std::string value) override{
+    virtual void setVar(std::string variable,std::string value) override{
 		sl.lock();
 		wm_[variable]=value;
 		publishEvent(variable,value);
@@ -66,7 +65,6 @@ public:
 	
 
  	void doSpin(){
-	
 		auto node = rclcpp::Node::SharedPtr(this);
 		rclcpp::spin(node);
 	}

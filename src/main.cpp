@@ -11,13 +11,15 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-  rclcpp::init(argc, argv);
 
-  std::cout<<"node running"<<std::endl;
+	rclcpp::init(argc, argv);
+
+  	std::cout<<"node running"<<std::endl;
     
 	WM::init(new RosDataSource());
 
-	UILink link_("/home/maytronics/dm_ros2_ws/src/dm/www");
+
+	UILink link_("/home/maytronics/dm_ros2_ws/src/cognitao.git/www","127.0.0.1",1234);
 	link_.start();
 
 	auto s1 = new State("locked");
@@ -42,20 +44,17 @@ int main(int argc, char * argv[]) {
 	stateS1->setMachine(&m);
 	WM::setVar("GRAPH", StateJSONWriter::toString(stateS1)  );
 
-
-
-
 	//cout<<StateJSONWriter::toString(stateS1)<<endl;
 
-
-
 	m.start();  
+
 	
-  std::this_thread::sleep_for(std::chrono::seconds(120));
-	cout<<" stop everything "<<endl;
+  	std::this_thread::sleep_for(std::chrono::seconds(120));
 	m.stop();
 	link_.stop();
-  rclcpp::shutdown();
-  return 0;
+  	rclcpp::shutdown();
+
+  
+  	return 0;
 }
 
