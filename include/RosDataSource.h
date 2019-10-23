@@ -4,17 +4,28 @@
 #include "rclcpp/rclcpp.hpp"
 #include "dm_ros2/msg/event_msg.hpp"
 
-class RosDataSource: public rclcpp::Node, public MapThreadSafeDataSource {
+
+void callback(const dm_ros2::msg::EventMsg::SharedPtr msg) {
+
+	cout<<" inside callback "<<endl; 
+	WM::setVar(msg->key, msg->value);
+}
+class RosDataSource:  public MapThreadSafeDataSource {
 
 public:
-  RosDataSource()
-  : Node("dm_ros_2"){	
+  RosDataSource(){	
+
+	g_node = rclcpp::Node::make_shared("dm_ros_2");
+  
+
   
 	event_pub_ 
-		= this->create_publisher<dm_ros2::msg::EventMsg>("/wme/out", 1000);		
+		= g_node->create_publisher<dm_ros2::msg::EventMsg>("/wme/out", 1000);
 
-	event_sub_ = this->create_subscription<dm_ros2::msg::EventMsg>(
-		"/wme/in", std::bind(&RosDataSource::callback, this, std::placeholders::_1));
+	
+	event_sub_ = g_node->create_subscription<dm_ros2::msg::EventMsg>
+      ("/wme/in", callback);
+	
 
 	spinTHread_ = std::thread(&RosDataSource::doSpin, this);
 	spinTHread_.detach();	
@@ -22,15 +33,10 @@ public:
 
   }
 
-  ~RosDataSource(){
-   }
+   ~RosDataSource(){
+    }
 
-    void callback(const dm_ros2::msg::EventMsg::SharedPtr msg) {
-	  WM::setVar(msg->key, msg->value);
-	}
-
-  
-
+    
     virtual void setVar(std::string variable,std::string value) override{
 		sl.lock();
 		wm_[variable]=value;
@@ -65,8 +71,8 @@ public:
 	
 
  	void doSpin(){
-		auto node = rclcpp::Node::SharedPtr(this);
-		rclcpp::spin(node);
+		rclcpp::spin(g_node);
+
 	}
 
 private:
@@ -76,6 +82,9 @@ private:
 	rclcpp::Publisher<dm_ros2::msg::EventMsg>::SharedPtr event_pub_;
 
 	std::thread spinTHread_;
+
+	rclcpp::Node::SharedPtr g_node = nullptr;
+
 
 };
 
