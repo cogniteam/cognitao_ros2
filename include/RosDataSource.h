@@ -67,6 +67,7 @@ public:
 	
 
  	void doSpin(){
+		 
 		rclcpp::spin(g_node);
 
 	}
@@ -82,4 +83,5 @@ private:
 	rclcpp::Node::SharedPtr g_node = nullptr;
 
 };
+
 
