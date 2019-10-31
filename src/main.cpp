@@ -5,7 +5,7 @@
 #include <CogniTAO.h>
 #include "../include/RosDataSource.h"
 #include "../include/StateRosProxy.h"
-#include "actions_manager/action/sum.hpp"
+
 
 
 
@@ -25,8 +25,8 @@ int main(int argc, char **argv) {
 	UILink link_("/home/maytronics/dm_ros2_ws/src/cognitao.git/www","127.0.0.1",1234);
 	link_.start();
 
-	auto s1 = new StateRosProxy<actions_manager::action::Sum>("sum1","Sum");
-	auto s2 = new StateRosProxy<actions_manager::action::Sum>("sum2","Sum");
+	auto s1 = new StateRosProxy("sum1","DriveForward");
+	auto s2 = new StateRosProxy("sum2","DriveBackward");
 
 	Machine m;
 	auto E1 = new ProtocolTransition ({"TO_FIB"});

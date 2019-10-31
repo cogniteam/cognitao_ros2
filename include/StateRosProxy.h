@@ -4,9 +4,10 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
-
+#include "action_manager/action/action_msg.hpp"
 
 using namespace std;
+using actionType=action_manager::action::ActionMsg;
 
 // void feedback_callback(
 //   rclcpp_action::ClientGoalHandle<Sum>::SharedPtr,
@@ -20,26 +21,21 @@ using namespace std;
 // }
 
 
-template <class ActionType>
-
-
 class StateRosProxy:  public State {
 
 public:
     StateRosProxy(string name, string action):State(name){	
         
         g_node_ = rclcpp::Node::make_shared(name);
-        action_client = rclcpp_action::create_client<ActionType>(g_node_,action);                
+        action_client = rclcpp_action::create_client<actionType>(g_node_,action);    
+        actionType_ =  action;           
     }
 
 	virtual void onStart() override {
 
         // Populate a goal
-        auto goal_msg = typename ActionType::Goal();
-        int num1 = 6;
-        int num2 = 5;
-        goal_msg.numbers.push_back(num1);
-        goal_msg.numbers.push_back(num2);
+        auto goal_msg =  actionType::Goal();
+        goal_msg.actiontype = actionType_;
 
         RCLCPP_INFO(g_node_->get_logger(), "Sending goal");
 
@@ -73,18 +69,16 @@ public:
             return;
         }              
         
-        typename rclcpp_action::ClientGoalHandle<ActionType>::Result result = result_future.get();
+        rclcpp_action::ClientGoalHandle<actionType>::Result result = result_future.get();
 
         printResult(result);
 
         RCLCPP_INFO(g_node_->get_logger(), "result received");
         
-        cout<<" the sum is "<<result.response->sum<<endl;    
-
-       
+      
 	}
 
-    void printResult(typename rclcpp_action::ClientGoalHandle<ActionType>::Result result){
+    void printResult(rclcpp_action::ClientGoalHandle<actionType>::Result result){
 
         switch(result.code) {
             case rclcpp_action::ResultCode::SUCCEEDED:
@@ -111,8 +105,9 @@ public:
 private:
 
     rclcpp::Node::SharedPtr g_node_ = nullptr;
-    typename rclcpp_action::Client<ActionType>::SharedPtr action_client;
-    typename rclcpp_action::ClientGoalHandle<ActionType>::SharedPtr goal_handle = nullptr;
+    rclcpp_action::Client<actionType>::SharedPtr action_client;
+    rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goal_handle = nullptr;
+    string actionType_;
 
 };
 

@@ -2,10 +2,10 @@
 
 #include <CogniTAO.h>
 #include "rclcpp/rclcpp.hpp"
-#include "dm_ros2/msg/event_msg.hpp"
+#include "cognitao_ros2/msg/event_msg.hpp"
 
 
-void callback(const dm_ros2::msg::EventMsg::SharedPtr msg) {
+void callback(const cognitao_ros2::msg::EventMsg::SharedPtr msg) {
 	cout<<" inside callback "<<endl; 
 	WM::setVar(msg->key, msg->value);
 }
@@ -20,9 +20,9 @@ public:
 		g_node = rclcpp::Node::make_shared("dm_ros_2");
 	
 		event_pub_ 
-			= g_node->create_publisher<dm_ros2::msg::EventMsg>("/wme/out", 1000);
+			= g_node->create_publisher<cognitao_ros2::msg::EventMsg>("/wme/out", 1000);
 		
-		event_sub_ = g_node->create_subscription<dm_ros2::msg::EventMsg>
+		event_sub_ = g_node->create_subscription<cognitao_ros2::msg::EventMsg>
 		("/wme/in", callback);	
 
 		spinTHread_ = std::thread(&RosDataSource::doSpin, this);
@@ -58,7 +58,7 @@ public:
 
 	void publishEvent(std::string variable,std::string value) {
 
-		dm_ros2::msg::EventMsg eventMsg; 
+		cognitao_ros2::msg::EventMsg eventMsg; 
 		eventMsg.key = variable;
 		eventMsg.value = value;
 		cout<<"publish msg "<<variable<<", "<<value<<endl;
@@ -74,9 +74,9 @@ public:
 
 private:
   	
-	rclcpp::Subscription<dm_ros2::msg::EventMsg>::SharedPtr event_sub_;
+	rclcpp::Subscription<cognitao_ros2::msg::EventMsg>::SharedPtr event_sub_;
 
-	rclcpp::Publisher<dm_ros2::msg::EventMsg>::SharedPtr event_pub_;
+	rclcpp::Publisher<cognitao_ros2::msg::EventMsg>::SharedPtr event_pub_;
 
 	std::thread spinTHread_;
 

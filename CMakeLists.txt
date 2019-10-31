@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(dm_ros2)
+project(cognitao_ros2)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -19,7 +19,7 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(actions_manager REQUIRED)
+find_package(action_manager REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(action_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
@@ -38,7 +38,7 @@ ament_target_dependencies(minimal_action_client
   rclcpp std_msgs 
   "rclcpp"
   "rclcpp_action"
-  "actions_manager"
+  "action_manager"
 )
 
 
