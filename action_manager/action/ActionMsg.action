@@ -1,0 +1,5 @@
+string actiontype 
+---
+string params
+---
+bool resultvalue
