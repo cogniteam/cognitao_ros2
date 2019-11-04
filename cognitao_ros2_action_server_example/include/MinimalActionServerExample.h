@@ -10,8 +10,8 @@
 using namespace std;
 
 enum action_code {
-    DriveForward,
-    DriveBackward,
+    DriveForward_FORVER,
+    DriveBackward_FORVER,
     DriveBackward_With_Timer,
     DriveForward_With_Timer,
     defaultNum
@@ -43,7 +43,7 @@ private:
 
     switch (e) {
 
-      case DriveForward :
+      case DriveForward_FORVER :
 
         for(;;){
           cout<<" im driving foraward now"<<endl;
@@ -51,13 +51,13 @@ private:
           loop_rate.sleep();
           if (goal_handle->is_canceling()) {
       
-            cout<<"Goal Canceled "<<endl;
+            cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
             return;
           }
         }
         break;
 
-      case DriveBackward:
+      case DriveBackward_FORVER:
         
         for(;;){
           cout<<" im driving backward now"<<endl;
@@ -65,7 +65,7 @@ private:
           loop_rate.sleep();
           if (goal_handle->is_canceling()) {
       
-            cout<<"Goal Canceled "<<endl;
+            cout<<"DriveBackward_FORVER ---> Goal Canceled "<<endl;
             return;
           }
         }
@@ -124,8 +124,8 @@ private:
     std::thread{std::bind(&MinimalActionServerExample::execute, this, _1), goal_handle}.detach();
   } 
   action_code hashit (std::string const& inString) {
-    if (inString == "DriveForward") return DriveForward;
-    if (inString == "DriveBackward") return DriveBackward;
+    if (inString == "DriveForward_FORVER") return DriveForward_FORVER;
+    if (inString == "DriveBackward_FORVER") return DriveBackward_FORVER;
     if (inString == "DriveBackward_With_Timer") return DriveBackward_With_Timer;
     if (inString == "DriveForward_With_Timer") return DriveForward_With_Timer;
   }

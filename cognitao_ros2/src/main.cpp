@@ -18,17 +18,17 @@ int main(int argc, char **argv) {
 	WM::init(new RosDataSource(argc, argv));
 
 
-	UILink link_("/home/maytronics/dm_ros2_ws/src/desicion_making/cognitao.git/www","127.0.0.1",1234);
+	UILink link_("/home/maytronics/dm_ros2_ws/src/dm_ros2/cognitao.git/www","127.0.0.1",1234);
 	link_.start();
 
 	bool USE_STATE = false;
 	bool USE_STATE_THREAD = true;
-	bool USE_BEHAVIOUR = true;
+	bool USE_BEHAVIOUR = false;
 	bool USE_BEHAVIOUR_THREAD = false;
 
 	if (USE_STATE ){
-		auto s1 = new StateRosProxy("DriveForward");
-		auto s2 = new StateRosProxy("DriveBackward");
+		auto s1 = new StateRosProxy("DriveForward_With_Timer");
+		auto s2 = new StateRosProxy("DriveBackward_With_Timer");
 
 		Machine m;
 		auto E1 = new ProtocolTransition ({"TO_DriveForward"});
@@ -53,8 +53,8 @@ int main(int argc, char **argv) {
 
 
 	if (USE_STATE_THREAD ){
-		auto s1 = new StateThreadRosProxy("DriveForward_With_Timer");
-		auto s2 = new StateThreadRosProxy("DriveBackward_With_Timer");
+		auto s1 = new StateThreadRosProxy("DriveForward_FORVER");
+		auto s2 = new StateThreadRosProxy("DriveBackward_FORVER");
 
 		Machine m;
 		auto E1 = new ProtocolTransition ({"TO_DriveForward"});
