@@ -12,12 +12,10 @@ using namespace std;
 enum action_code {
     DriveForward,
     DriveBackward,
+    DriveBackward_With_Timer,
+    DriveForward_With_Timer,
     defaultNum
 };
-
-
-
-
 
 using actionType=action_manager::action::ActionMsg;
 using GoalHandleActionType = rclcpp_action::ServerGoalHandle<actionType>;
@@ -34,83 +32,107 @@ private:
 
 
   virtual void execute(const std::shared_ptr<GoalHandleActionType> goal_handle) override {
-     cout<<"enter to override exe 1 "<<endl;
-    //RCLCPP_INFO(g_node_->get_logger(), "Executing goal");
-    cout<<"enter to override exe 2 "<<endl;
-  
+
+    rclcpp::Rate loop_rate(1);
     const auto goal = goal_handle->get_goal();
-    cout<<"enter to override exe 3 "<<endl;
+    auto feedback = std::make_shared<actionType::Feedback>();
+    auto result = std::make_shared<actionType::Result>();
+    bool returnValue = true;
 
     action_code e = hashit(goal->actiontype);
 
-    cout<<e<<endl;
+    switch (e) {
 
-    switch (e)
-    {
-    case DriveForward :
-      cout<<" im driving foraward now"<<endl;
-      break;
-        case DriveBackward:
-      cout<<" im driving backward now"<<endl;
-      break;
-    
+      case DriveForward :
+
+        for(;;){
+          cout<<" im driving foraward now"<<endl;
+          goal_handle->publish_feedback(feedback);
+          loop_rate.sleep();
+          if (goal_handle->is_canceling()) {
+      
+            cout<<"Goal Canceled "<<endl;
+            return;
+          }
+        }
+        break;
+
+      case DriveBackward:
+        
+        for(;;){
+          cout<<" im driving backward now"<<endl;
+          goal_handle->publish_feedback(feedback);
+          loop_rate.sleep();
+          if (goal_handle->is_canceling()) {
+      
+            cout<<"Goal Canceled "<<endl;
+            return;
+          }
+        }
+        break;
+
+      case DriveBackward_With_Timer:
+        
+        for(int i = 0; i < 20; i++){
+          cout<<" im driving backward WITH_TIMER now"<<i<<endl;
+          goal_handle->publish_feedback(feedback);
+          loop_rate.sleep();
+          if (goal_handle->is_canceling()) {      
+            cout<<"Goal Canceled "<<endl;
+            return;
+          }
+        }
+        // set return value for BehaviourRosProxy
+        break;  
+
+       case DriveForward_With_Timer:
+        
+        for(int i = 0; i < 20; i++){
+          cout<<" im driving forward WITH_TIMER now"<<i<<endl;
+          goal_handle->publish_feedback(feedback);
+          loop_rate.sleep();
+          if (goal_handle->is_canceling()) {      
+            cout<<"Goal Canceled "<<endl;
+            return;
+          }
+        }
+        // set return value for BehaviourRosProxy
+        break;  
+
+
+
       default:
-      cout<<"nothing "<<endl;
-      break;
+        cout<<"nothing "<<endl;
+        break;
     }
-    
-    
+
+    // Check if goal is done
+    if (rclcpp::ok()) {
+      cout<<" set Goal Succeeded "<<endl;
+      result->resultvalue = returnValue;
+      goal_handle->set_succeeded(result);
+    }   
+
+   
 
     
-    // rclcpp::Rate loop_rate(1);
-    // const auto goal = goal_handle->get_goal();
-    // //auto feedback = std::make_shared<actionType::Feedback>();
-    // // auto & sequence = feedback->sequence;
-    // // sequence.push_back(0);
-    // // sequence.push_back(1);
-    // auto result = std::make_shared<actionType::Result>();
+  } 
 
-    // cout<<"i got "<<goal->actiontype <<endl;
+  virtual void handle_accepted(const std::shared_ptr<GoalHandleActionType> goal_handle) override {
+    using namespace std::placeholders;
+    // this needs to return quickly to avoid blocking the executor, so spin up a new thread
+    std::thread{std::bind(&MinimalActionServerExample::execute, this, _1), goal_handle}.detach();
+  } 
+  action_code hashit (std::string const& inString) {
+    if (inString == "DriveForward") return DriveForward;
+    if (inString == "DriveBackward") return DriveBackward;
+    if (inString == "DriveBackward_With_Timer") return DriveBackward_With_Timer;
+    if (inString == "DriveForward_With_Timer") return DriveForward_With_Timer;
+  }
 
 
-    // // for (int i = 1; (i < goal->order) && rclcpp::ok(); ++i) {
-    // //   // Check if there is a cancel request
-    // //   if (goal_handle->is_canceling()) {
-    // //     //result->sequence = sequence;
-    // //     goal_handle->canceled(result);
-    // //     RCLCPP_INFO(this->get_logger(), "Goal Canceled");
-    // //     return;
-    // //   }
-    // //   // Update sequence
-    // //   //sequence.push_back(sequence[i] + sequence[i - 1]);
-    // //   // Publish feedback
-    // //   //goal_handle->publish_feedback(feedback);
-    // //   RCLCPP_INFO(this->get_logger(), "Publish Feedback");
 
-    // //   loop_rate.sleep();
-    // // }
 
-    // // Check if goal is done
-    // if (rclcpp::ok()) {
-    //   //result->sequence = sequence;
-    //   goal_handle->set_succeeded(result);
-    //   RCLCPP_INFO(g_node_->get_logger(), "Goal Succeeded");
-    // }
-    } 
-
-    virtual void handle_accepted(const std::shared_ptr<GoalHandleActionType> goal_handle) override {
-      cout<<"enter to override handle"<<endl;
-      using namespace std::placeholders;
-      // this needs to return quickly to avoid blocking the executor, so spin up a new thread
-      std::thread{std::bind(&MinimalActionServerExample::execute, this, _1), goal_handle}.detach();
-    } 
-    action_code hashit (std::string const& inString) {
-      if (inString == "DriveForward") return DriveForward;
-      if (inString == "DriveBackward") return DriveBackward;
-
-      cout<<"bla"<<endl;
-      return defaultNum;
-    }
 private:
       rclcpp::Node::SharedPtr g_node_ = nullptr;
   

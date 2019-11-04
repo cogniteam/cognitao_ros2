@@ -36,7 +36,6 @@ private:
   rclcpp_action::GoalResponse handle_goal(
     const std::array<uint8_t, 16> & uuid,
     std::shared_ptr<const actionType::Goal> goal) {
-    //RCLCPP_INFO(this->get_logger(), "Received goal request with actiontype %s", goal->actiontype);
     (void)uuid;
     
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
@@ -45,6 +44,7 @@ private:
   rclcpp_action::CancelResponse handle_cancel(
     const std::shared_ptr<GoalHandleActionType> goal_handle)
   {
+    cout<<" cancel "<<endl; 
     RCLCPP_INFO(g_node_->get_logger(), "Received request to cancel goal");
     (void)goal_handle;
     return rclcpp_action::CancelResponse::ACCEPT;
@@ -52,40 +52,13 @@ private:
 
   virtual void execute(const std::shared_ptr<GoalHandleActionType> goal_handle)
   {
-    RCLCPP_INFO(g_node_->get_logger(), "Executing goal");
-    rclcpp::Rate loop_rate(1);
     const auto goal = goal_handle->get_goal();
-    //auto feedback = std::make_shared<actionType::Feedback>();
-    // auto & sequence = feedback->sequence;
-    // sequence.push_back(0);
-    // sequence.push_back(1);
+    auto feedback = std::make_shared<actionType::Feedback>();
     auto result = std::make_shared<actionType::Result>();
-
-    cout<<"i got "<<goal->actiontype <<endl;
-
-
-    // for (int i = 1; (i < goal->order) && rclcpp::ok(); ++i) {
-    //   // Check if there is a cancel request
-    //   if (goal_handle->is_canceling()) {
-    //     //result->sequence = sequence;
-    //     goal_handle->canceled(result);
-    //     RCLCPP_INFO(this->get_logger(), "Goal Canceled");
-    //     return;
-    //   }
-    //   // Update sequence
-    //   //sequence.push_back(sequence[i] + sequence[i - 1]);
-    //   // Publish feedback
-    //   //goal_handle->publish_feedback(feedback);
-    //   RCLCPP_INFO(this->get_logger(), "Publish Feedback");
-
-    //   loop_rate.sleep();
-    // }
 
     // Check if goal is done
     if (rclcpp::ok()) {
-      //result->sequence = sequence;
       goal_handle->set_succeeded(result);
-      RCLCPP_INFO(g_node_->get_logger(), "Goal Succeeded");
     }
   }
 

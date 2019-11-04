@@ -1,5 +1,8 @@
+# Goal
 string actiontype 
 ---
-string params
----
+# Result
 bool resultvalue
+---
+# Feedback
+string params
