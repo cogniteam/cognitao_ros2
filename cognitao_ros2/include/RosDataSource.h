@@ -25,8 +25,8 @@ public:
 		event_sub_ = g_node->create_subscription<cognitao_ros2::msg::EventMsg>
 		("/wme/in", callback);	
 
-		spinTHread_ = std::thread(&RosDataSource::doSpin, this);
-		spinTHread_.detach();	
+		spinThread_ = std::thread(&RosDataSource::doSpin, this);
+		spinThread_.detach();	
     }
 
    ~RosDataSource(){
@@ -78,7 +78,7 @@ private:
 
 	rclcpp::Publisher<cognitao_ros2::msg::EventMsg>::SharedPtr event_pub_;
 
-	std::thread spinTHread_;
+	std::thread spinThread_;
 
 	rclcpp::Node::SharedPtr g_node = nullptr;
 

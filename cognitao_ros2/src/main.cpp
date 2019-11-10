@@ -7,6 +7,8 @@
 #include "../include/StateRosProxy.h"
 #include "../include/StateThreadRosProxy.h"
 #include "../include/BehaviourRosProxy.h"
+#include "../include/BehaviourThreadRosProxy.h"
+
 
 using namespace std;
 
@@ -22,9 +24,9 @@ int main(int argc, char **argv) {
 	link_.start();
 
 	bool USE_STATE = false;
-	bool USE_STATE_THREAD = true;
+	bool USE_STATE_THREAD = false;
 	bool USE_BEHAVIOUR = false;
-	bool USE_BEHAVIOUR_THREAD = false;
+	bool USE_BEHAVIOUR_THREAD = true;
 
 	if (USE_STATE ){
 		auto s1 = new StateRosProxy("DriveForward_With_Timer");
@@ -88,6 +90,22 @@ int main(int argc, char **argv) {
 		WM::setVar("GRAPH", BehaviourJSONWriter::toString(BehaviourS1)  );
 
 		BehaviourS1->start();
+
+		link_.stop();
+	}
+
+	if (USE_BEHAVIOUR_THREAD){
+		auto s1 = new BehaviourThreadRosProxy("DriveForward_FORVER");
+		auto s2 = new BehaviourThreadRosProxy("DriveBackward_FORVER");
+
+		Behaviour * BehaviourS1 = (Behaviour*) TaskFactory::createTask("seq","root");
+		BehaviourS1->addChild(s1);
+		BehaviourS1->addChild(s2);
+
+		WM::setVar("GRAPH", BehaviourJSONWriter::toString(BehaviourS1)  );
+
+		BehaviourS1->start();
+		cout<<"BehaviourS1 "<<BehaviourS1->getReturn();
 
 		link_.stop();
 	}

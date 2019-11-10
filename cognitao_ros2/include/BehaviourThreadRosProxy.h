@@ -9,7 +9,7 @@
 using namespace std;
 using actionType=action_manager::action::ActionMsg;
 
-void BehaviourRosProxy_feedback_callback(
+void BehaviourThreadRosProxy_feedback_callback(
   rclcpp_action::ClientGoalHandle<actionType>::SharedPtr,
   const std::shared_ptr<const actionType::Feedback> feedback)
 {
@@ -17,15 +17,15 @@ void BehaviourRosProxy_feedback_callback(
 }
 
 
-class BehaviourRosProxy:  public Behaviour {
+class BehaviourThreadRosProxy:  public BehaviourThread {
 
 public:
-    BehaviourRosProxy(string name):Behaviour(name){	
+    BehaviourThreadRosProxy(string name):BehaviourThread(name){	
         
         g_node_ = rclcpp::Node::make_shared(name);
         action_client = rclcpp_action::create_client<actionType>(g_node_,"action_manager");    
         actionType_ =  name; 
-        cout<<" constructor BehaviourRosProxy "<<endl;
+        cout<<" constructor BehaviourThreadRosProxy "<<endl;
           
     }
 
@@ -40,7 +40,7 @@ public:
         RCLCPP_INFO(g_node_->get_logger(), "Sending goal");
 
         // Ask server to achieve some goal and wait until it's accepted
-        auto goal_handle_future = action_client->async_send_goal(goal_msg, BehaviourRosProxy_feedback_callback); 
+        auto goal_handle_future = action_client->async_send_goal(goal_msg, BehaviourThreadRosProxy_feedback_callback); 
 
         if (rclcpp::spin_until_future_complete(g_node_, goal_handle_future) !=
             rclcpp::executor::FutureReturnCode::SUCCESS) {
@@ -54,25 +54,62 @@ public:
             return;
         } 
 
-        Behaviour::onStart();      
+        BehaviourThread::onStart(); 
+
+        //// stop req
+        stopReqThread_ = std::thread(&BehaviourThreadRosProxy::loopStopReq, this);
+		stopReqThread_.detach();	     
 	
 	}
+
+    void loopStopReq() {
+
+        rclcpp::Rate loop_rate(1);
+
+        for (int i = 0 ; i < 10; i++ ){
+
+            loop_rate.sleep();
+
+        }
+
+        stopRequested = true;
+
+
+        
+    }
+
 
 
      virtual bool action() override {
 
-         // Wait for the server to be done with the goal
+        //Wait for the server to be done with the goal
         auto result_future = goal_handle->async_result();
 
-        RCLCPP_INFO(g_node_->get_logger(), "Waiting for result");
-        if (rclcpp::spin_until_future_complete(g_node_, result_future) !=
-            rclcpp::executor::FutureReturnCode::SUCCESS ) {
-            return false;
-        }              
-        
-        rclcpp_action::ClientGoalHandle<actionType>::Result result = result_future.get();
+        while (true) {
+            cout<<" stopRequested "<<stopRequested<<endl;
+            auto wait_result = rclcpp::spin_until_future_complete(
+            g_node_,
+            result_future,
+            std::chrono::seconds(1));
+            
+            if( rclcpp::executor::FutureReturnCode::TIMEOUT == wait_result){
+                if (stopRequested == true){
+                    cout<<"finished ----> send cancelllll "<<endl;
+                    auto cancel_result_future = action_client->async_cancel_goal(goal_handle);
+                    break;
+                }
+            }
 
-        return getServerResult(result); 
+            if ( wait_result == rclcpp::executor::FutureReturnCode::SUCCESS){ 
+                cout<<"finished ----> server SUCCESS "<<endl;
+                break;
+            }              
+        
+        }
+
+
+        cout<<" rrrr "<<endl;
+        return getServerResult(result_future.get()); 
     } 
 
     bool getServerResult(rclcpp_action::ClientGoalHandle<actionType>::Result result){
@@ -109,6 +146,8 @@ private:
     rclcpp_action::Client<actionType>::SharedPtr action_client;
     rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goal_handle = nullptr;
     string actionType_;
+    std::thread stopReqThread_;
+
 
 };
 
