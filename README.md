@@ -17,6 +17,7 @@ For more information about CogniTAO decision making system see-[https://github.c
 - [Client side](#clientside)
     - [StateRosproxy](#staterosproxy)
     - [StateThreadRosProxy](#statethreadrosproxy)
+-[Server side](#serverside)
 - [Contributing](#contributing)
 ## Getting atarted
 First, create your own workspace.
@@ -86,10 +87,13 @@ string value
 The action_manager directory contains ActionMsg.h file (located at [action_manager/action]).
 
 The action conatains three fields-
-**Goal**- the desirable action that the user want the server will do.
-the goal expresses by string which called action type.
-**Result**- boolean value that represents whether the operation was successful or notץ
-**FeedBack** -string that give feedback about the action's status.
+
+**Goal**- the desirable action that the user want the server to execute.
+The goal is expressed by a string which called action type.
+
+**Result**- boolean value that represents whether the operation was successful or not.
+
+**FeedBack** -string that gives feedback about the action's status.
 ```
 # Goal
 string actiontype 
@@ -106,7 +110,7 @@ The structures located in [cognitao_ros2] directory.
 
 ### StateRosproxy
 The StateProxy is a State.
-When creating a new StateRosProxy, the user chooses a name which expresses the state's action.
+When creating a new StateRosProxy, the user chooses a name which expresses the state's action(the goal he send to the server).
 
 ```
 auto s1 = new StateRosProxy("DriveForward_With_Timer");
@@ -125,10 +129,39 @@ Similar to StateRosproxy When creating a new StateThreadRosProxy, the user choos
 auto s2 = new StateRosProxy("DriveForward_With_Timer");
 
 ```
-The state above do action of driving foraward in separate thread.
+The state above operates an actionof driving forward in a separate thread.
 If the user decide to cancel the action, its stops.
 
+## Server side
+To create the server side for the user's machine create a new package inside [yourWS/src].
 
+Add to the CMake file:
+find_package(ament_cmake REQUIRED)
+find_package(action_manager REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
+
+ament_target_dependencies(your_action_server_node_name
+  "rclcpp"
+  "rclcpp_action"
+  "action_manager"
+  "cognitao_ros2_action_server"
+)
+
+
+include_directories(
+	include
+	../cognitao_ros2_action_server/include/
+)
+
+install(TARGETS your_action_server_node_name
+  DESTINATION lib/${PROJECT_NAME})
+```
+Add to package.xml:
+```
+```
+
+Create your own server-
 ## Contributing
 
 Feel free to contact us at info@cogniteam.com if you wish to contribute code to the library
