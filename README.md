@@ -13,6 +13,7 @@ For more information about CogniTAO decision making system see-[https://github.c
 - [Integration](#integration)
 - [Prerequisites](#prerequisites)
 - [RosDataSource](#send\geT-events)
+- [Action manager](#actionmanger)
 - [Client side](#clientside)
     - [StateRosproxy](#staterosproxy)
     - [StateThreadRosProxy](#statethreadrosproxy)
@@ -81,8 +82,27 @@ The first field called- key, the second- value.
 string key
 string value
 ```
+## Action manager
+The action_manager directory contains ActionMsg.h file (located at [action_manager/action]).
+
+The action conatains three fields-
+**Goal**- the desirable action that the user want the server will do.
+the goal expresses by string which called action type.
+**Result**- boolean value that represents whether the operation was successful or notץ
+**FeedBack** -string that give feedback about the action's status.
+
+# Goal
+string actiontype 
+---
+# Result
+bool resultvalue
+---
+# Feedback
+string params
+
 ## Client side
-The client side based on CogniTAO library and supports all the buildings it includes.
+The client side based on CogniTAO library and supports all the structures it includes.
+The structures located in [cognitao_ros2] directory.
 
 ### StateRosproxy
 The StateProxy is a State.
@@ -99,6 +119,14 @@ Note that the StateRosproxy inherits from a state(not StateThread) so cancelling
 Beyond that, the StateRosProxy has the same functionality as State has.
 
 ### StateThreadRosProxy
+The StateThreadRosProxy is a StateThread.
+Similar to StateRosproxy When creating a new StateThreadRosProxy, the user chooses a name which expresses the state's action.
+```
+auto s2 = new StateRosProxy("DriveForward_With_Timer");
+
+```
+The state above do action of driving foraward in separate thread.
+If the user decide to cancel the action, its stops.
 
 
 ## Contributing
