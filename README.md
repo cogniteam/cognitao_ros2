@@ -90,7 +90,7 @@ The action conatains three fields-
 the goal expresses by string which called action type.
 **Result**- boolean value that represents whether the operation was successful or notץ
 **FeedBack** -string that give feedback about the action's status.
-
+```
 # Goal
 string actiontype 
 ---
@@ -99,7 +99,7 @@ bool resultvalue
 ---
 # Feedback
 string params
-
+```
 ## Client side
 The client side based on CogniTAO library and supports all the structures it includes.
 The structures located in [cognitao_ros2] directory.
