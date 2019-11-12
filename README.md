@@ -15,6 +15,7 @@ For more information about CogniTAO decision making system see-[https://github.c
 - [RosDataSource](#send\geT-events)
 - [Client side](#clientside)
     - [StateRosproxy](#staterosproxy)
+    - [StateThreadRosProxy](#statethreadrosproxy)
 - [Contributing](#contributing)
 ## Getting atarted
 First, create your own workspace.
@@ -85,18 +86,19 @@ The client side based on CogniTAO library and supports all the buildings it incl
 
 ### StateRosproxy
 The StateProxy is a State.
-When creating a new StateRosProxy, The user gives it a name that expresses the state action.
+When creating a new StateRosProxy, the user chooses a name which expresses the state's action.
 
 ```
 auto s1 = new StateRosProxy("DriveForward_With_Timer");
 ```
-For example, the state above action's is to drive forward for a while.
-Each StateProxy has his own action type that starts when the state starts.
-(It ask the  server to achieve some goal and wait until it's accepted).
+For example, the state's above action is to drive forward for a while.
+Each StateProxy has its own action type that starts when the state starts
+(by asking the  server to achieve some goal and wait until it's accepted).
 
-Note that the StateRosproxy inherit from state(not StateThread) so cancelling the task not really stop it until it done.
-Beyont that, the StateRosProxy has the same functionality as State has.
+Note that the StateRosproxy inherits from a state(not StateThread) so cancelling the task not really stop it's until it done.
+Beyond that, the StateRosProxy has the same functionality as State has.
 
+### StateThreadRosProxy
 
 
 ## Contributing
