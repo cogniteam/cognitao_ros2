@@ -13,6 +13,8 @@ For more information about CogniTAO decision making system see-[https://github.c
 - [Integration](#integration)
 - [Prerequisites](#prerequisites)
 - [RosDataSource](#send\geT-events)
+- [Client side](#clientside)
+    - [StateRosproxy](#staterosproxy)
 - [Contributing](#contributing)
 ## Getting atarted
 First, create your own workspace.
@@ -56,7 +58,7 @@ add_executable(dm_ros_node
 C++11 support, ROS.
 
 ## RosDataSource 
-For the worldM<odel ROS interface- use the RosDataSource when initializing the World Model.
+For the worldModel ROS interface- use the RosDataSource when initializing the World Model.
 ```
 WM::init(new RosDataSource(argc, argv));
 ```
@@ -78,6 +80,23 @@ The first field called- key, the second- value.
 string key
 string value
 ```
+## Client side
+The client side based on CogniTAO library and supports all the buildings it includes.
+
+### StateRosproxy
+The StateProxy is a State.
+When creating a new StateRosProxy, The user gives it a name that expresses the state action.
+
+```
+auto s1 = new StateRosProxy("DriveForward_With_Timer");
+```
+For example, the state above action's is to drive forward for a while.
+Each StateProxy has his own action type that starts when the state starts.
+(It ask the  server to achieve some goal and wait until it's accepted).
+
+Note that the StateRosproxy inherit from state(not StateThread) so cancelling the task not really stop it until it done.
+Beyont that, the StateRosProxy has the same functionality as State has.
+
 
 
 ## Contributing
