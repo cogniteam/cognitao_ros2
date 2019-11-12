@@ -135,7 +135,9 @@ If the user decide to cancel the action, its stops.
 ## Server side
 To create the server side for the user's machine create a new package inside [yourWS/src].
 
+
 Add to the CMake file:
+```
 find_package(ament_cmake REQUIRED)
 find_package(action_manager REQUIRED)
 find_package(rclcpp REQUIRED)
