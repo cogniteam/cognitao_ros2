@@ -17,6 +17,7 @@ For more information about CogniTAO decision making system see-[https://github.c
 - [Client side](#clientside)
     - [StateRosproxy](#staterosproxy)
     - [StateThreadRosProxy](#statethreadrosproxy)
+
 -[Server side](#serverside)
 - [Contributing](#contributing)
 ## Getting atarted
@@ -166,7 +167,7 @@ Add to package.xml:
 
 Create your own server:
 The next step is to create the server in the include directory.
-On the top of the file add this lines:
+On the top of the file add those lines:
 ```
 #include <inttypes.h>
 #include <memory>
@@ -177,8 +178,8 @@ On the top of the file add this lines:
 
 #include <MinimalActionServer.h>
 ```
-Notice that you include the MinimalActionServer - the basic struct of server of this librery.
-Your on server has to inherit from the MinimalActionServer, and then to override the execute() method.
+Notice that you include the MinimalActionServer - the basic server of this librery.
+Your own server has to inherit from the MinimalActionServer, and then to override the execute() method.
 The functionality of each action can be implemented in the execute() method by using switch\case design.
 
 Follow the next example to build the execute method-
