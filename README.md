@@ -161,10 +161,50 @@ install(TARGETS your_action_server_node_name
 ```
 Add to package.xml:
 ```
+<depend>rclcpp_action</depend>
 ```
 
-Create your own server-
+Create your own server:
+The next step is to create the server in the include directory.
+On the top of the file add this lines:
+```
+#include <inttypes.h>
+#include <memory>
+
+#include "action_manager/action/action_msg.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
+
+#include <MinimalActionServer.h>
+```
+Notice that you include the MinimalActionServer - the basic struct of server of this librery.
+Your on server has to inherit from the MinimalActionServer, and then to override the execute() method.
+The functionality of each action can be implemented in the execute() method by using switch\case design.
+
+Follow the next example to build the execute method-
+```
+//get the action type from the client
+const auto goal = goal_handle->get_goal();
+
+//get the feedback message from the client
+auto feedback = std::make_shared<actionType::Feedback>();
+
+//get the reference to the result value
+auto result = std::make_shared<actionType::Result>();
+
+////////here create the switch/case pattern- for each goal implement the desire functionality/////////
+
+//check if goal is done, then update the result value
+    if (rclcpp::ok()) {
+      cout<<" set Goal Succeeded "<<endl;
+      result->resultvalue = returnValue;
+      goal_handle->set_succeeded(result);
+    }   
+```
+ 
+ 
+
 ## Contributing
 
-Feel free to contact us at info@cogniteam.com if you wish to contribute code to the library
+Feel free to contact us at info@cogniteam.com if you wish to contribute code to the library const auto goal = goal_handle->get_goal();
 
