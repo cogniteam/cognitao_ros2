@@ -16,8 +16,8 @@ For more information about CogniTAO decision making system see-[https://github.c
 - [Action manager](#actionmanger)
 - [Client side](#clientside)
     - [StateRosproxy](#staterosproxy)
-    - [StateThreadRosProxy](#statethreadrosproxy)
-
+    - [StateThreadRosProxy](#statethreadrosproxy) 
+    - 
 -[Server side](#serverside)
 - [Contributing](#contributing)
 ## Getting atarted
