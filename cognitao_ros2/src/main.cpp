@@ -15,18 +15,20 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-  	std::cout<<"node running"<<std::endl;
     
 	WM::init(new RosDataSource(argc, argv));
 
-
-	UILink link_("/home/maytronics/dm_ros2_ws/src/dm_ros2/cognitao.git/www","127.0.0.1",1234);
+	const char* homeDir = getenv("HOME");
+	
+	string path = string(homeDir)+ "/dm_ros2_ws/src/dm_ros2/cognitao.git/www";
+	UILink link_(path.data(),"127.0.0.1",1234);
+	cout<<path<<endl;
 	link_.start();
 
-	bool USE_STATE = false;
+	bool USE_STATE = true;
 	bool USE_STATE_THREAD = false;
 	bool USE_BEHAVIOUR = false;
-	bool USE_BEHAVIOUR_THREAD = true;
+	bool USE_BEHAVIOUR_THREAD = false;
 
 	if (USE_STATE ){
 		auto s1 = new StateRosProxy("DriveForward_With_Timer");
@@ -98,22 +100,16 @@ int main(int argc, char **argv) {
 		auto s1 = new BehaviourThreadRosProxy("DriveForward_FORVER");
 		auto s2 = new BehaviourThreadRosProxy("DriveBackward_FORVER");
 
-		Behaviour * BehaviourS1 = (Behaviour*) TaskFactory::createTask("seq","root");
+		Behaviour * BehaviourS1 = (Behaviour*) TaskFactory::createTask("par","root");
 		BehaviourS1->addChild(s1);
 		BehaviourS1->addChild(s2);
 
 		WM::setVar("GRAPH", BehaviourJSONWriter::toString(BehaviourS1)  );
 
 		BehaviourS1->start();
-		cout<<"BehaviourS1 "<<BehaviourS1->getReturn();
 
 		link_.stop();
 	}
-
-	
-
-	
-
   
   	return 0;
 }

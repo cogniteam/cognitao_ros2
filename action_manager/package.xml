@@ -3,8 +3,8 @@
 <package format="3">
   <name>action_manager</name>
   <version>0.6.2</version>
-  <description>Contains message and service definitions used by the examples.</description>
-  <maintainer email="dthomas@osrfoundation.org">Dirk Thomas</maintainer>
+  <description>TODO: Package description</description>
+  <maintainer email="yakir@cogniteam.com">yakir</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

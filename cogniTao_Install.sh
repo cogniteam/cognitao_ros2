@@ -2,7 +2,6 @@
 ## Your links in an array
 echo "starting"
 
-#declare -a arr="https://lin:la0526280083@git.cogni.io/cognitao/dm.git"
 
 declare -a arr="https://github.com/cogniteam/cognitao.git"
 #echo "remove old version"

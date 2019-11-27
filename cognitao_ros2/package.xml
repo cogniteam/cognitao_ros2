@@ -4,7 +4,7 @@
   <name>cognitao_ros2</name>
   <version>0.6.2</version>
   <description>TODO: Package description</description>
-  <maintainer email="yakir@cogniteam.com">maytronics</maintainer>
+  <maintainer email="yakir@cogniteam.com">yakir</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

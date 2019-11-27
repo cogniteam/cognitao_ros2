@@ -4,9 +4,9 @@
   <name>cognitao_ros2_action_server_example</name>
   <version>0.6.3</version>
   <description>Minimal action server examples</description>
-  <maintainer email="jacob@openrobotics.org">Jacob Perron</maintainer>
+  <maintainer email="yakir@cogniteam.com">yakir</maintainer>
   <license>Apache License 2.0</license>
-  <author email="jacob@openrobotics.org">Jacob Perron</author>
+  <author email="yakir@cogniteam.com">yakir</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

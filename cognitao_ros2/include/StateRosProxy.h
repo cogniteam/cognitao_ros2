@@ -11,8 +11,7 @@ using actionType=action_manager::action::ActionMsg;
 
 void StateRosProxy_feedback_callback(
   rclcpp_action::ClientGoalHandle<actionType>::SharedPtr,
-  const std::shared_ptr<const actionType::Feedback> feedback)
-{
+  const std::shared_ptr<const actionType::Feedback> feedback){
     cout<<" get feedback "<<endl; 
 }
 
