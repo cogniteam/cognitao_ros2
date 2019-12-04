@@ -52,6 +52,9 @@ private:
           if (goal_handle->is_canceling()) {
       
             cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
+            cout<<" set Goal Succeeded "<<endl;
+            result->resultvalue = returnValue;
+            goal_handle->set_succeeded(result);
             return;
           }
         }
@@ -66,6 +69,9 @@ private:
           if (goal_handle->is_canceling()) {
       
             cout<<"DriveBackward_FORVER ---> Goal Canceled "<<endl;
+            cout<<" set Goal Succeeded "<<endl;
+            result->resultvalue = returnValue;
+            goal_handle->set_succeeded(result);
             return;
           }
         }

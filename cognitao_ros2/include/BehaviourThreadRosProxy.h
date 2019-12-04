@@ -107,9 +107,8 @@ public:
         
         }
 
-
-        cout<<" rrrr "<<endl;
-        return getServerResult(result_future.get()); 
+        return true;    
+        //return getServerResult(result_future.get()); 
     } 
 
     bool getServerResult(rclcpp_action::ClientGoalHandle<actionType>::Result result){
