@@ -4,8 +4,10 @@
   <name>action_manager</name>
   <version>0.6.2</version>
   <description>TODO: Package description</description>
-  <maintainer email="yakir@cogniteam.com">yakir</maintainer>
-  <license>Apache License 2.0</license>
+  
+  <maintainer email="ari@cogniteam.com">ari</maintainer>
+  <license>MIT</license>
+  <author email="ari@cogniteam.com">ari</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
