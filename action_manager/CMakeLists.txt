@@ -12,7 +12,15 @@ endif()
 
 find_package(action_msgs REQUIRED)
 find_package(ament_cmake REQUIRED)
+find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+
+
+rosidl_generate_interfaces(new_msg
+  "msg/KeyValMsg.msg"
+  "msg/ParamtersMsg.msg"
+  DEPENDENCIES builtin_interfaces
+)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "action/ActionMsg.action"

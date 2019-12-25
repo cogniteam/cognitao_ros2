@@ -18,6 +18,7 @@ for i in "${arr[@]}"
 do
     ## Use basename to extract folder name from link
     git clone $i $folder/$(basename $i) 
+    echo "finished"	
 done
 
 
