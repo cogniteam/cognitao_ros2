@@ -16,27 +16,26 @@
 using namespace std;
 
 
+
+
 int main(int argc, char **argv) {
 
-    
+
 	WM::init(new RosDataSource(argc, argv));
 	TaskFactory::init(new TaskFactoryMethodRos2);
 
+	std::map<std::string, std::string> params;
+	Task* task = new BehaviourTask("drive");
+	task->setRunner(new Ros2Runner("drive",params));
+	task->run();
 
-	std::map<std::string, std::string> parameters;
-	Ros2Runner runner("DriveForward_With_Timer",parameters);
-	runner.run();
+	//config("/home/maytronics/dm_ros2_ws/src/dm_ros2/cognitao.git/config_lin.json");
 
-	if (argc < 2) {
-		cout<<"-- MISSING CONFIG FILE --"<<endl;
-		show_usage(argv);
-		return 1;
+	while (true)
+	{
+		/* code */
 	}
-	else{
-		config(argv[1]);
-	}
-	return 1;
-
+		
 
 
 

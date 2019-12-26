@@ -1,2 +1,0 @@
-string Key
-string Val

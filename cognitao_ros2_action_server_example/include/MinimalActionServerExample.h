@@ -39,78 +39,30 @@ private:
     auto result = std::make_shared<actionType::Result>();
     bool returnValue = true;
 
-    action_code e = hashit(goal->actiontype);
+    //action_code e = hashit(goal->actiontype);
+    string action_type = goal->goal.actiontype;
+    std::map<std::string, std::string> parameters;
+    for (auto const& param : goal->goal.parameters) {
 
-    switch (e) {
-
-      case DriveForward_FORVER :
-
-        for(;;){
-          cout<<" im driving foraward now"<<endl;
-          goal_handle->publish_feedback(feedback);
-          loop_rate.sleep();
-          if (goal_handle->is_canceling()) {
-      
-            cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
-            cout<<" set Goal Succeeded "<<endl;
-            result->resultvalue = returnValue;
-            goal_handle->set_succeeded(result);
-            return;
-          }
-        }
-        break;
-
-      case DriveBackward_FORVER:
-        
-        for(;;){
-          cout<<" im driving backward now"<<endl;
-          goal_handle->publish_feedback(feedback);
-          loop_rate.sleep();
-          if (goal_handle->is_canceling()) {
-      
-            cout<<"DriveBackward_FORVER ---> Goal Canceled "<<endl;
-            cout<<" set Goal Succeeded "<<endl;
-            result->resultvalue = returnValue;
-            goal_handle->set_succeeded(result);
-            return;
-          }
-        }
-        break;
-
-      case DriveBackward_With_Timer:
-        
-        for(int i = 0; i < 20; i++){
-          cout<<" im driving backward WITH_TIMER now"<<i<<endl;
-          goal_handle->publish_feedback(feedback);
-          loop_rate.sleep();
-          if (goal_handle->is_canceling()) {      
-            cout<<"Goal Canceled "<<endl;
-            return;
-          }
-        }
-        // set return value for BehaviourRosProxy
-        break;  
-
-       case DriveForward_With_Timer:
-        
-        for(int i = 0; i < 20; i++){
-          cout<<" im driving forward WITH_TIMER now"<<i<<endl;
-          goal_handle->publish_feedback(feedback);
-          loop_rate.sleep();
-          if (goal_handle->is_canceling()) {      
-            cout<<"Goal Canceled "<<endl;
-            return;
-          }
-        }
-        // set return value for BehaviourRosProxy
-        break;  
-
-
-
-      default:
-        cout<<"nothing "<<endl;
-        break;
+        parameters[param.key] = param.val;           
     }
+
+
+    if (true){
+
+      for(;;){
+        cout<<" executing "<<action_type<<endl;
+        goal_handle->publish_feedback(feedback);
+        loop_rate.sleep();
+        if (goal_handle->is_canceling()) {    
+          cout<<"Goal Canceled "<<endl;
+          result->resultvalue = returnValue;
+          goal_handle->set_succeeded(result);
+          return;
+        }
+      }
+    }
+
 
     // Check if goal is done
     if (rclcpp::ok()) {

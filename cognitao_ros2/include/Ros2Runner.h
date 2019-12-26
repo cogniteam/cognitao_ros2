@@ -17,10 +17,12 @@
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "action_manager/action/action_msg.hpp"
 
+
 #include <CogniTAO.h>
 
 
-using actionType=action_manager::action::ActionMsg;
+using actionType=   action_manager::action::ActionMsg;
+
 using namespace std;
 
 void Ros2Runner_feedback_callback(
@@ -39,14 +41,36 @@ public:
 
 	Ros2Runner(string action, std::map<std::string, std::string> parameters) : Runner(action,parameters){
 
-		g_node_ = rclcpp::Node::make_shared(action);
-        action_client = rclcpp_action::create_client<actionType>(g_node_,"action_manager");
+         cout<<" yakri 1  "<<action<<endl;
 
-		stopRequested = false;	
+
+		g_node_ = rclcpp::Node::make_shared("action");
+                 cout<<" yakri 1  1"<<endl;
+
+        action_client = rclcpp_action::create_client<actionType>(g_node_,"action_manager");
+        cout<<" yakri 1  2"<<endl;
+
+		stopRequested = false;
+
+               
+	
 
 		 // Populate a goal
         auto goal_msg =  actionType::Goal();
-        goal_msg.actiontype = action_;
+       
+        goal_msg.goal.actiontype = action;
+        for (auto const& x : parameters) {
+
+            ros2_cognitao_msgs::msg::KeyValMsg param;
+            param.key = x.first;
+            param.val = x.second; 
+            goal_msg.goal.parameters.push_back(param);
+           
+        }
+
+                        cout<<" yakri 2  "<<endl;
+
+       
 
         RCLCPP_INFO(g_node_->get_logger(), "Sending goal");
 
@@ -57,7 +81,10 @@ public:
             rclcpp::executor::FutureReturnCode::SUCCESS) {
             RCLCPP_ERROR(g_node_->get_logger(), "send goal call failed :(");
             return ;
-        }        
+        }  
+
+                                cout<<" yakri 3  "<<endl;
+      
 
         goal_handle = goal_handle_future.get();
         if (!goal_handle) {
@@ -80,6 +107,7 @@ public:
         auto result_future = goal_handle->async_result();
 
         while (true) {
+            cerr<<" ros2_runner is running "<<endl;
 
             auto wait_result = rclcpp::spin_until_future_complete(
             g_node_,

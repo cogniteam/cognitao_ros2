@@ -19,7 +19,12 @@ public:
 			std::string value,
 			std::string runner,
 			std::map<std::string, std::string> params
-	){
+	){	
+		std::map<std::string, std::string> parameters;
+
+		cerr<<" yakiur "<<endl;
+		Ros2Runner* runner_ = new Ros2Runner(name,params);	
+		runner_->run();
 
 		cout<< "Building " << name << " " << type << " " << runner << endl;
 		Task *tRet = nullptr;
@@ -62,17 +67,22 @@ public:
 		if(std::strcmp(type.c_str(), "task") == 0)
 		{
 			if(runner=="ros2")
-			{
-				tRet=new BehaviourRunner(name);
-				tRet->setRunner(new Ros2Runner(name,params));
-				tRet->setType("task");
-				tRet->setDescritpion(description);
+			{	
+				cerr<<"1111111111111111111 "<<endl;
+				tRet=new BehaviourTask(name);
+				cerr<<"222222222 "<<endl;
+				//Ros2Runner* runner_ = new Ros2Runner(name,params);	
+				// tRet->setRunner(new Ros2Runner(name,params));
+				// cerr<<"333333333 "<<endl;
+				// tRet->setDescritpion(description);
+				// cerr<<"4444444 "<<endl;
+				
+
 			}
 
 			else
 			{
 				tRet = new BehaviourWait(name,2,params);
-				tRet->setType("task");
 				tRet->setDescritpion(description);
 			}
 		}
