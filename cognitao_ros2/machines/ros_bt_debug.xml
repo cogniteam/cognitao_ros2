@@ -1,0 +1,27 @@
+<plan name="testBT">
+	<loop name="Main mission loop" variable="1">
+	   <sequencer name="Navigator"> 
+	   		 <selector name="Drive To Goal"> 
+	               <parallel name="Follow Path"> 
+	                     <task name="Preserve speed" param_tm="3.0" param_x="$current_goal_x" param_z="3.0" description="$CurrentVelocity: 2.3 m/s"/>
+	                     <task name="Preserve heading" description="$Heading: 130 deg"/>
+	               </parallel>
+	               <task name="Recovery" description="Not a critical test" runner="local" action="wait" param_time="3.0"/>
+	         </selector>
+	         <task name="Generate Random" description="generate a random 1-10" runner="local" action="generateRandom" param_random="$random"/>
+	         <wait name="wait" value="3"/>
+	         <task name="Wait random" description="wait for $random seconds" runner="local" action="waitRandom" param_random="$random"/>
+	         <!-- <task name="Loop 10 times" description="loop 10" runner="local" action="loop10" param_loop="$loop"/> -->
+	         <set name="Setting Goal Distance" variable="Distance" value="1"/>
+	         <condition name="Goal reached?" variable="Distance" operation="<" value="2"/>
+	         <parallel name="Find Docking Station"> 
+	               <task name="Slowly Rotate" description="Velocity: 10.0 deg/sec" />
+	               <task name="Search for beacon"/>
+	         </parallel>
+	         <set name="Setting Goal Distance" variable="Distance" value="4"/>
+	         <condition name="Docking succeeded" variable="Docked" operation="=" value="true"/>
+	         <wait name="wait" description="wait for power" value="3"/>
+	         <task name="Report" runner="ros2" action="wait" param_time="$time" />
+	   </sequencer>
+   </loop>
+</plan>

@@ -30,9 +30,6 @@ find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_runtime REQUIRED)
 
 
-
-
-
 add_executable(minimal_action_client src/main.cpp)
 ament_target_dependencies(minimal_action_client 
   rclcpp std_msgs 
@@ -42,8 +39,14 @@ ament_target_dependencies(minimal_action_client
 )
 
 
+add_library(cognitao_ros2_shared SHARED  src/main.cpp )
 
-
+ament_target_dependencies(cognitao_ros2_shared 
+  rclcpp std_msgs 
+  "rclcpp"
+  "rclcpp_action"
+  "action_manager"
+)
 
 install(TARGETS
     minimal_action_client
@@ -51,9 +54,15 @@ install(TARGETS
 )
 
 
+install(TARGETS
+    cognitao_ros2_shared
+    DESTINATION lib/${PROJECT_NAME}
+)
+
+
 include_directories(
-	include
-	../cognitao.git/include/
+
+  include  /usr/include/cognitao/
 )
 
 if(BUILD_TESTING)
@@ -68,11 +77,8 @@ set(msg_files
 
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  #"action/SumExample.action"
   ${msg_files}  
   DEPENDENCIES builtin_interfaces 
-  #DEPENDENCIES rosidl_default_generators 
-  #DEPENDENCIES action_msgs 
  
 )
 
@@ -80,12 +86,13 @@ ament_export_dependencies(
   rosidl_default_runtime
 )
 
-
-
-
 rosidl_target_interfaces(minimal_action_client ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
+
+
+
 ament_export_dependencies(rosidl_default_runtime)
+
 
 
 ament_package()

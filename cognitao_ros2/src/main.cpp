@@ -1,149 +1,54 @@
-#include <stdio.h>
-#include <stdlib.h>
+
+
 #include <iostream>
-#include <CogniTAO.h>
-#include "../include/RosDataSource.h"
-
-// #include "../include/StateRosProxy.h"
-// #include "../include/StateThreadRosProxy.h"
-// #include "../include/BehaviourRosProxy.h"
-// #include "../include/BehaviourThreadRosProxy.h"
 #include "../include/Ros2Runner.h"
-#include "../include/TaskFactoryMethodRos2.h"
+#include <atomic>
+#include <CogniTao.h>
 
+static std::atomic<int> counter(0);
 
-
-using namespace std;
-
-
-
-
-int main(int argc, char **argv) {
-
-
-	WM::init(new RosDataSource(argc, argv));
-	TaskFactory::init(new TaskFactoryMethodRos2);
-
-	std::map<std::string, std::string> params;
-	Task* task = new BehaviourTask("drive");
-	task->setRunner(new Ros2Runner("drive",params));
-	task->run();
-
-	//config("/home/maytronics/dm_ros2_ws/src/dm_ros2/cognitao.git/config_lin.json");
-
-	while (true)
-	{
-		/* code */
-	}
-		
-
-
-
-	// const char* homeDir = getenv("HOME");
-	
-	// string path = string(homeDir)+ "/dm_ros2_ws/src/dm_ros2/cognitao.git/www";
-	// UILink link_(path.data(),"127.0.0.1",1234);
-	// cout<<path<<endl;
-	// link_.start();
-
-	// bool USE_STATE = false;
-	// bool USE_STATE_THREAD = false;
-	// bool USE_BEHAVIOUR = false;
-	// bool USE_BEHAVIOUR_THREAD = true;
-
-	// auto s1 = new BehaviourThread("DriveForward_With_Timer");
-
-
-	// if (USE_STATE ){
-	// 	auto s1 = new StateRosProxy("DriveForward_With_Timer");
-	// 	auto s2 = new StateRosProxy("DriveBackward_With_Timer");
-
-	// 	Machine m;
-	// 	auto E1 = new ProtocolTransition ({"TO_DriveForward"});
-	// 	auto E2 = new ProtocolTransition ({"TO_DriveBackward"});
-
-	// 	m.setInitialTask(s1);
-		
-	// 	m.addLink(s2,s1,E1);
-	// 	m.addLink(s1,s2,E2);
-
-
-	// 	State * stateS1 = (State*) TaskFactory::createTask("state","root");
-	// 	stateS1->setMachine(&m);
-	// 	WM::setVar("GRAPH", StateJSONWriter::toString(stateS1)  );
-
-	// 	m.start(); 
-
-	// 	std::this_thread::sleep_for(std::chrono::seconds(1000));
-	// 	m.stop();
-	// 	link_.stop();
-	// }
-
-
-	// if (USE_STATE_THREAD ){
-	// 	auto s1 = new StateThreadRosProxy("DriveForward_FORVER");
-	// 	auto s2 = new StateThreadRosProxy("DriveBackward_FORVER");
-
-	// 	Machine m;
-	// 	auto E1 = new ProtocolTransition ({"TO_DriveForward"});
-	// 	auto E2 = new ProtocolTransition ({"TO_DriveBackward"});
-
-	// 	m.setInitialTask(s1);
-		
-	// 	m.addLink(s2,s1,E1);
-	// 	m.addLink(s1,s2,E2);
-
-
-	// 	State * stateS1 = (State*) TaskFactory::createTask("state","root");
-	// 	stateS1->setMachine(&m);
-	// 	WM::setVar("GRAPH", StateJSONWriter::toString(stateS1)  );
-
-	// 	m.start(); 
-
-	// 	std::this_thread::sleep_for(std::chrono::seconds(1000));
-	// 	m.stop();
-	// 	link_.stop();
-	// }
-
-	// if (USE_BEHAVIOUR){
-	// 	Machine m;
-
-	// 	auto s1 = new BehaviourThreadRosProxy("DriveForward_With_Timer");
-	// 	auto s2 = new BehaviourThreadRosProxy("DriveBackward_With_Timer");
-
-	// 	Behaviour * BehaviourS1 = (Behaviour*) TaskFactory::createTask("seq","root");
-	// 	BehaviourS1->addChild(s1);
-	// 	BehaviourS1->addChild(s2);
-
-	// 	WM::setVar("GRAPH", BehaviourJSONWriter::toString(BehaviourS1)  );
-
-	// 	m.setInitialTask(BehaviourS1);
-	// 	m.start();
-	// 	while(!BehaviourS1->isFinished())
-	// 		std::this_thread::sleep_for(std::chrono::seconds(1000));
-	// 	link_.stop();
-	// }
-
-	// if (USE_BEHAVIOUR_THREAD){
-		
-	// 	Machine m;
-
-	// 	auto s1 = new BehaviourThreadRosProxy("DriveForward_FORVER");
-	// 	auto s2 = new BehaviourThreadRosProxy("DriveBackward_FORVER");
-
-	// 	BehaviourThread * BehaviourS1 = (BehaviourThread*) TaskFactory::createTask("par","root");
-	// 	BehaviourS1->addChild(s1);
-	// 	BehaviourS1->addChild(s2);
-
-	// 	WM::setVar("GRAPH", BehaviourJSONWriter::toString(BehaviourS1)  );
-
-	// 	m.setInitialTask(BehaviourS1);
-	// 	m.start();
-	// 	while(!BehaviourS1->isFinished())
-	// 		std::this_thread::sleep_for(std::chrono::seconds(1000));
-	// 	link_.stop();
-	// }
-  
-  	return 0;
+extern "C" Runner *create_runner()
+{
+  if (!rclcpp::ok())
+  {
+    cout<<" init "<<endl;
+    rclcpp::init(0, nullptr);
+  }
+  counter++;
+  return new Ros2Runner();
 }
 
+extern "C" void destroy_runner(Runner *object)
+{
+  counter --;
+  delete object;
+  if(counter==0) rclcpp::shutdown();
+
+}
+
+extern "C" const char *get_runner_type()
+{
+  return "ros2_runner";
+}
+
+int main()
+{
+  // Runner *r1 = create_runner();
+  // Runner *r2 = create_runner();
+  // map<string, string> map_;
+  // map_["time"] = "10.0";
+  // r1->setAction("wait");
+  // r1->setParameters(map_);
+  // r1->run();
+  // r2->setAction("wait");
+  // r2->setParameters(map_);
+  // r2->run();
+
+  // // Runner *r1 = create_runner();
+  // //  map<string, string> map_;
+  // // map_["time"] = "10.0";
+  // // r1->setAction("wait");
+  // // r1->setParameters(map_);
+  // // r1->run();
+  return 0;
+}
