@@ -1,3 +1,0 @@
-string actiontype
-KeyValMsg[] parameters
-
