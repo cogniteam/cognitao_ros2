@@ -13,7 +13,9 @@
 
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
-
+  <depend>example_interfaces</depend>
+  <depend>rclcpp_action</depend>
+<!-- <depend>action_msgs</depend> (from package action)-->
 
   <build_depend>builtin_interfaces</build_depend>
   <build_depend>rosidl_default_generators</build_depend>
@@ -38,5 +40,8 @@
 
   <export>
     <build_type>ament_cmake</build_type>
+    <ros1_bridge mapping_rules="mapping_rules.yaml"/>
   </export>
 </package>
+
+

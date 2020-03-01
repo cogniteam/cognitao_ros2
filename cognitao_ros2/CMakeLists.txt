@@ -28,29 +28,57 @@ find_package(rosidl_typesupport_cpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_runtime REQUIRED)
+find_package(action_msgs REQUIRED)
+find_package(ros2_cognitao_msgs REQUIRED)
 
 
-add_executable(minimal_action_client src/main.cpp)
+add_executable(minimal_action_client 
+  src/Ros2RunnerPlugin.cpp
+  src/Ros2Runner.cpp
+)
+
 ament_target_dependencies(minimal_action_client 
-  rclcpp std_msgs 
-  "rclcpp"
+  rclcpp
+  std_msgs
   "rclcpp_action"
   "action_manager"
 )
 
 
-add_library(cognitao_ros2_shared SHARED  src/main.cpp )
+add_executable(action_server_example
+  src/server_example/server_example_main.cpp
+  src/MinimalActionServer.cpp
+  src/server_example/MinimalActionServerExample.cpp
+)
+
+ament_target_dependencies(action_server_example 
+  rclcpp
+  std_msgs
+  "rclcpp_action"
+  "action_manager"
+)
+
+add_executable(action_server_not_composable 
+  src/server_main.cpp
+  src/MinimalActionServer.cpp
+)
+
+ament_target_dependencies(action_server_not_composable
+  "rclcpp"
+  "rclcpp_action"
+  "action_manager"
+  "cognitao_ros2_action_server"
+)
+
+
+
+add_library(cognitao_ros2_shared SHARED  src/Ros2RunnerPlugin.cpp )
 
 ament_target_dependencies(cognitao_ros2_shared 
-  rclcpp std_msgs 
-  "rclcpp"
+  rclcpp
+  std_msgs
   "rclcpp_action"
   "action_manager"
-)
-
-install(TARGETS
-    minimal_action_client
-    DESTINATION lib/${PROJECT_NAME}
 )
 
 
@@ -59,10 +87,28 @@ install(TARGETS
     DESTINATION lib/${PROJECT_NAME}
 )
 
+install(FILES mapping_rules.yaml DESTINATION share/${PROJECT_NAME})
+
+
+# rclcpp
+
+
+install(TARGETS minimal_action_client
+    DESTINATION lib/${PROJECT_NAME}
+)
+
+install(TARGETS action_server_not_composable
+    DESTINATION lib/${PROJECT_NAME})
+
+install(TARGETS action_server_example
+    DESTINATION lib/${PROJECT_NAME})
+
+
+
 
 include_directories(
-
-  include  /usr/include/cognitao/
+  include
+  /usr/include/cognitao/
 )
 
 if(BUILD_TESTING)
@@ -73,14 +119,21 @@ endif()
 
 set(msg_files
   "msg/EventMsg.msg"
+
 )
 
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}  
+  "action/ActionMsg.action"
+  "msg/KeyValMsg.msg"
+  "msg/GoalMsg.msg"
+  DEPENDENCIES ros2_cognitao_msgs
+  DEPENDENCIES action_msgs 
   DEPENDENCIES builtin_interfaces 
  
 )
+
 
 ament_export_dependencies(
   rosidl_default_runtime
