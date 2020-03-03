@@ -72,13 +72,17 @@ ament_target_dependencies(action_server_not_composable
 
 
 
-add_library(cognitao_ros2_shared SHARED  src/Ros2RunnerPlugin.cpp )
+add_library(cognitao_ros2_shared SHARED 
+   src/Ros2RunnerPlugin.cpp
+   src/Ros2Runner.cpp )
 
 ament_target_dependencies(cognitao_ros2_shared 
   rclcpp
   std_msgs
   "rclcpp_action"
   "action_manager"
+
+
 )
 
 

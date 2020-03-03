@@ -15,8 +15,11 @@ Ros2Runner::Ros2Runner()
 }
 
 Ros2Runner::Ros2Runner(const string &action, map<string, string> parameters) : Runner(action, parameters)
-{
+{   
+
+    cout<<" yakir 1 "<<endl;
     g_node_ = rclcpp::Node::make_shared("action");
+        cout<<" yakir 2 "<<endl;
 
     stopRequested = false;
     success_ = false;
@@ -24,10 +27,14 @@ Ros2Runner::Ros2Runner(const string &action, map<string, string> parameters) : R
 bool Ros2Runner::run()
 {
     stopRequested = false;
-
+    
     signal(SIGINT, h_sig_sigint); //to handle with ctrl+c button
+    
+        cout<<" yakir 3 "<<endl;
+
     // Populate a goal
     auto goal_msg = actionType::Goal();
+         cout<<" yakir 4 "<<endl;
 
     goal_msg.goal.actiontype = action_;
 
@@ -41,6 +48,7 @@ bool Ros2Runner::run()
     }
 
     action_client = rclcpp_action::create_client<actionType>(g_node_, "action_manager");
+        cout<<" yakir 5 "<<endl;
 
     RCLCPP_INFO(g_node_->get_logger(), "Sending goal");
 
