@@ -1,0 +1,25 @@
+{
+    "options" : ["LOAD_AND_PLAY", "TEST"],
+    "mode" : "LOAD_AND_PLAY",
+    "LOAD_AND_PLAY": {
+        "options" : ["plan","log_path","log_topics", "replay"],
+        "plan": "/home/maytronics/dm_ros2_ws/src/dm_ros2/cognitao_ros2/machines/ros_bt_debug.xml", 
+      "log_path" :"wm.log",
+      "uilink_basepath" : "./src/dm_ros2/cognitao.git/www",
+      "replay": "replay.log", 
+      "log_topics" : ["INTERNAL_STATE_START","INTERNAL_STATE_STOP","INTERNAL_SUBSTATE_START","INTERNAL_SUBSTATE_STOP"],
+      "WM" : {
+            "Distance" : "1",
+            "Docked" : "true"
+          },
+      "agent" : "A1",
+        "IP": "127.0.0.1",
+      "port" : "1234"	
+      },
+    "TEST": {
+      "options" : ["bt","hsm_xml","writeBehaviour_json","writeBehaviour_xml","writeState_Xml","writeState_json","fsm","hsm"],
+          "hsm_xml":"../machines/hsm.xml"
+   
+      }
+  }
+  
