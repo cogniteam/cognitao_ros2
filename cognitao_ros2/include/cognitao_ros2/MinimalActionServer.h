@@ -1,6 +1,6 @@
 #include <inttypes.h>
 #include <memory>
-#include "action_manager/action/action_msg.hpp"
+#include "cognitao_ros2/action/action_msg.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 using namespace std;
@@ -10,7 +10,7 @@ class MinimalActionServer
 {
 public:
   
-  using actionType=action_manager::action::ActionMsg;
+  using actionType=cognitao_ros2::action::ActionMsg;
   using GoalHandleActionType = rclcpp_action::ServerGoalHandle<actionType>;
 
 
@@ -26,7 +26,7 @@ public:
       std::bind(&MinimalActionServer::handle_cancel, this, std::placeholders::_1),
       std::bind(&MinimalActionServer::handle_accepted, this, std::placeholders::_1)
       );
-      cout<<" constructor "<<endl;
+      cout<<" constructor ..."<<endl;
   }
 
 private:

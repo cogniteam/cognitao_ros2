@@ -1,0 +1,133 @@
+/**
+ * @file Ros2Runner.cpp
+ 
+ * @author your name (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2020-03-03
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
+
+#include <cognitao_ros2/client/Ros2Runner.h>
+
+void h_sig_sigint(int signum)
+{
+    std::cout << "Receive signum: " << signum << std::endl;
+    rclcpp::shutdown();
+}
+
+Ros2Runner::Ros2Runner()
+{
+    g_node_ = rclcpp::Node::make_shared("action");
+
+    stopRequested = false;
+    success_ = false;
+}
+
+Ros2Runner::Ros2Runner(const string &action, map<string, string> parameters) : Runner(action, parameters)
+{   
+    
+    g_node_ = rclcpp::Node::make_shared("action");
+    stopRequested = false;
+    success_ = false;
+}
+bool Ros2Runner::run()
+{
+    stopRequested = false;
+    success_=false;
+    
+    signal(SIGINT, h_sig_sigint); //to handle with ctrl+c button    
+    
+
+    // Populate a goal
+    auto goal_msg = actionType::Goal();
+        
+
+    goal_msg.goal.actiontype = action_;
+            cout<<" action_"<<action_<<endl;
+
+    for (auto const &x : parameters_)
+    {
+        cognitao_ros2::msg::KeyValMsg param;
+        param.key = x.first;
+        param.val = x.second;
+        goal_msg.goal.parameters.push_back(param);
+
+                    cout<<" param.key"<<param.key<<endl;
+                      cout<<" param.val"<<param.val<<endl;
+
+    }
+
+    action_client = rclcpp_action::create_client<actionType>(g_node_, "action_manager");
+        cout<<" yakir 5 "<<endl;
+
+    RCLCPP_INFO(g_node_->get_logger(), "Sending goal");
+
+    // Ask server to achieve some goal and wait until it's accepted
+    auto goal_handle_future = action_client->async_send_goal(goal_msg);
+    cout<<"lin1"<<endl;
+    if (rclcpp::spin_until_future_complete(g_node_, goal_handle_future) !=
+        rclcpp::executor::FutureReturnCode::SUCCESS)
+    {
+        RCLCPP_ERROR(g_node_->get_logger(), "send goal call failed :(");
+        return false;
+    }
+        cout<<"lin2"<<endl;
+
+    goal_handle = goal_handle_future.get();
+    if (!goal_handle)
+    {
+        RCLCPP_ERROR(g_node_->get_logger(), "Goal was rejected by server");
+        return false;
+    }
+    cout<<"lin3"<<endl;
+
+    //Wait for the server to be done with the goal
+    auto result_future = goal_handle->async_result();
+
+    while (true)
+    {
+    cout<<"lin4"<<endl;
+
+        auto wait_result = rclcpp::spin_until_future_complete(
+            g_node_,
+            result_future,
+            std::chrono::seconds(1));
+    cout<<"lin5"<<endl;
+
+        if (rclcpp::executor::FutureReturnCode::TIMEOUT == wait_result)
+        {
+
+            if (stopRequested == true)
+            {
+                cout << "finished ----> send cancelllll " << endl;
+                auto cancel_result_future = action_client->async_cancel_goal(goal_handle);
+
+                stop();
+                success_ = false;
+                return success_;
+                ;
+            }
+        }
+
+        if (wait_result == rclcpp::executor::FutureReturnCode::SUCCESS)
+        {
+            cout << "finished ----> server SUCCESS " << endl;
+
+            stop();
+            success_ = true;
+            return success_;
+            ;
+        }
+    }
+
+    stop();
+    return false;
+}
+
+void Ros2Runner::stop() { stopRequested = true; }
+
+std::string Ros2Runner::getType() { return "ros2"; };

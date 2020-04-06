@@ -1,4 +1,4 @@
-#include "../include/MinimalActionServer.h"
+#include "../include/cognitao_ros2/MinimalActionServer.h"
 
 int main(int argc, char ** argv)
 {

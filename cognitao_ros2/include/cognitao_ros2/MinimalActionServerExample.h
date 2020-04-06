@@ -1,23 +1,16 @@
 #include <inttypes.h>
 #include <memory>
 
-#include "action_manager/action/action_msg.hpp"
+#include "cognitao_ros2/action/action_msg.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 
-#include <MinimalActionServer.h>
+#include "MinimalActionServer.h"
 
 using namespace std;
 
-enum action_code {
-    DriveForward_FORVER,
-    DriveBackward_FORVER,
-    DriveBackward_With_Timer,
-    DriveForward_With_Timer,
-    defaultNum
-};
 
-using actionType=action_manager::action::ActionMsg;
+using actionType=cognitao_ros2::action::ActionMsg;
 using GoalHandleActionType = rclcpp_action::ServerGoalHandle<actionType>;
 
 class MinimalActionServerExample: public MinimalActionServer {
@@ -37,26 +30,28 @@ private:
     const auto goal = goal_handle->get_goal();
     auto feedback = std::make_shared<actionType::Feedback>();
     auto result = std::make_shared<actionType::Result>();
-    bool returnValue = true;
+    
 
-    //action_code e = hashit(goal->actiontype);
     string action_type = goal->goal.actiontype;
+
+    cout<<" got action : "<<action_type<<endl;
     std::map<std::string, std::string> parameters;
     for (auto const& param : goal->goal.parameters) {
-
-        parameters[param.key] = param.val;           
+        parameters[param.key] = param.val;
+        cout<<" val is "<<param.val<<endl;
     }
 
+    if (action_type == "wait"){
 
-    if (true){
-
-      for(;;){
-        cout<<" executing "<<action_type<<endl;
+      int totalLoop =  atoi(parameters["time"].c_str());
+      cout<<" inside wait "<<endl;
+      for(int i = 0; i <  totalLoop; i++){
+        cout<<" executing "<<action_type<<" i "<<i<<endl;
         goal_handle->publish_feedback(feedback);
         loop_rate.sleep();
         if (goal_handle->is_canceling()) {    
           cout<<"Goal Canceled "<<endl;
-          result->resultvalue = returnValue;
+          result->resultvalue = false;
           goal_handle->set_succeeded(result);
           return;
         }
@@ -67,7 +62,7 @@ private:
     // Check if goal is done
     if (rclcpp::ok()) {
       cout<<" set Goal Succeeded "<<endl;
-      result->resultvalue = returnValue;
+      result->resultvalue = true;
       goal_handle->set_succeeded(result);
     }   
 
@@ -81,12 +76,7 @@ private:
     // this needs to return quickly to avoid blocking the executor, so spin up a new thread
     std::thread{std::bind(&MinimalActionServerExample::execute, this, _1), goal_handle}.detach();
   } 
-  action_code hashit (std::string const& inString) {
-    if (inString == "DriveForward_FORVER") return DriveForward_FORVER;
-    if (inString == "DriveBackward_FORVER") return DriveBackward_FORVER;
-    if (inString == "DriveBackward_With_Timer") return DriveBackward_With_Timer;
-    if (inString == "DriveForward_With_Timer") return DriveForward_With_Timer;
-  }
+  
 
 
 
