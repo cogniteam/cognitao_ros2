@@ -1,7 +1,6 @@
+#include "../include/cognitao_ros2/server/MinimalActionServer.h"
 
-#include <cognitao_ros2/server/MinimalActionServer.h>
-
-int main(int argc, char **argv)
+int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 

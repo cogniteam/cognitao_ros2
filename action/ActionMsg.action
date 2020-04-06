@@ -1,5 +1,5 @@
 # Goal
-ros2_cognitao_msgs/GoalMsg goal
+cognitao_ros2/GoalMsg goal
 ---
 # Result
 bool resultvalue
