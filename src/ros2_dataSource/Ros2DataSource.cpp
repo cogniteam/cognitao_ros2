@@ -57,8 +57,11 @@ Ros2DataSource::Ros2DataSource(){
     event_pub_ =
         g_node_->create_publisher<cognitao_ros2::msg::EventMsg>("/wme/in", 1000);
 
-    event_sub_ = g_node_->create_subscription<cognitao_ros2::msg::EventMsg>("/wme/in"
-        , std::bind(&Ros2DataSource::onDataSourceEvent, this,_1));
+    //
+    // TODO Wrong usage probably
+    //
+    // event_sub_ = g_node_->create_subscription<cognitao_ros2::msg::EventMsg>("/wme/in", 
+    //         std::bind(&Ros2DataSource::onDataSourceEvent, this,_1));
 
 
     spinThread_ = std::thread(&Ros2DataSource::doSpin, this);

@@ -39,6 +39,7 @@
 #include <iostream>
 
 #include "cognitao_ros2/action/action_msg.hpp"
+#include <cognitao_ros2/msg/event_msg.hpp>
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "rclcpp/rclcpp.hpp"
 
@@ -74,13 +75,13 @@ public:
     /**
      * @brief stop executing task 
      */
-    virtual void stop();
+    virtual void stop() override;
 
    /**
      * @brief Gets the Type
      * @return std::string 
      */
-    virtual std::string getType(); 
+    virtual std::string getType() override;  
 
 private:
 

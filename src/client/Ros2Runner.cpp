@@ -51,6 +51,9 @@ Ros2Runner::Ros2Runner(){
 
     stopRequested = false;
     success_ = false;
+
+    cognitao_ros2::msg::EventMsg param;
+    cout << param.key << endl;
 }
 
 Ros2Runner::Ros2Runner(const string &action, map<string, string> parameters) : Runner(action, parameters){   

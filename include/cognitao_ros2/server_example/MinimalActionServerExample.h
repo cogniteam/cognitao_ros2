@@ -52,7 +52,11 @@ private:
         if (goal_handle->is_canceling()) {    
           cout<<"Goal Canceled "<<endl;
           result->resultvalue = false;
-          goal_handle->set_succeeded(result);
+
+          //
+          // TODO Wrong usage, probably should be goal_handle->succeed(result)
+          // 
+          // goal_handle->set_succeeded(result);
           return;
         }
       }
@@ -63,7 +67,11 @@ private:
     if (rclcpp::ok()) {
       cout<<" set Goal Succeeded "<<endl;
       result->resultvalue = true;
-      goal_handle->set_succeeded(result);
+
+      //
+      // TODO Wrong usage, probably should be goal_handle->succeed(result)
+      // 
+      // goal_handle->set_succeeded(result);
     }   
 
    

@@ -1,6 +1,6 @@
 #include <inttypes.h>
 #include <memory>
-#include "cognitao_ros2/action/action_msg.hpp"
+
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 using namespace std;
@@ -57,7 +57,10 @@ private:
 
     // Check if goal is done
     if (rclcpp::ok()) {
-      goal_handle->set_succeeded(result);
+      //
+      // TODO Wrong usage, probably should be goal_handle->succeed(result)
+      // 
+      // goal_handle->set_succeeded(result);
     }
   }
 
