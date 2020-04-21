@@ -93,10 +93,10 @@ target_link_libraries(cognitao_ros2_shared
   CogniTao::cognitao_core
 )
 
-# install(TARGETS
-#   cognitao_ros2_shared
-#   DESTINATION /usr/lib/cognitao/plugins/
-# )
+install(TARGETS
+  cognitao_ros2_shared
+  DESTINATION /usr/lib/cognitao/plugins/
+)
 
 
 add_executable(action_server_example 
