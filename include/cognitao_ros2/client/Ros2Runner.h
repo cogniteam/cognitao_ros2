@@ -64,6 +64,10 @@ public:
 
     Ros2Runner(const string &action, map<string, string> parameters);
 
+    virtual ~Ros2Runner() {
+        
+    }
+
 public:
 
     /**

@@ -20,6 +20,10 @@ public:
   explicit MinimalActionServerExample(rclcpp::Node::SharedPtr node)
     :MinimalActionServer(node){}
 
+  ~MinimalActionServerExample() {
+    
+  }
+
 private:
   rclcpp_action::Server<actionType>::SharedPtr action_server_; 
 
