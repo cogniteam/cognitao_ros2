@@ -56,7 +56,7 @@ Ros2Runner::Ros2Runner(){
     cout << param.key << endl;
 }
 
-Ros2Runner::Ros2Runner(const string &action, map<string, string> parameters) : Runner(action, parameters){   
+Ros2Runner::Ros2Runner(const string &action, map<string, string> parameters) {   
     
     g_node_ = rclcpp::Node::make_shared("action");
     stopRequested = false;
