@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="/ros.jpeg"><br><br>
+  <img src="assets/cognitao_ros2_header.png"><br><br>
 </div>
 
 -----------------
@@ -9,11 +9,12 @@ Decision making system implementation interface and proxy for ROS.
 
 For more information about CogniTAO decision making system see-[https://github.com/cogniteam/cognitao] 
 
-- [Getting Started](#getting-started)
-- [Integration](#integration)
-- [Prerequisites](#prerequisites)
-- [RosDataSource](#send\geT-events)
-- [Contributing](#contributing)
+- [COGNITAO_ROS](#cognitaoros)
+  - [Getting atarted](#getting-atarted)
+  - [Integration](#integration)
+  - [Prerequisites](#prerequisites)
+  - [RosDataSource](#rosdatasource)
+  - [Contributing](#contributing)
 ## Getting atarted
 First, create your own workspace.
 The next step is to download the project into the src directory.
