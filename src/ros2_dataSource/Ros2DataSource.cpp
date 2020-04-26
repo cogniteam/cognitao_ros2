@@ -48,22 +48,18 @@ Ros2DataSource::Ros2DataSource(){
 
 
     if (!rclcpp::ok()){
-
         rclcpp::init(0, nullptr);
     }
    
     g_node_ = rclcpp::Node::make_shared("cognitao_ros2");
 
     event_pub_ =
-        g_node_->create_publisher<cognitao_ros2::msg::EventMsg>("/wme/in", 1000);
+        g_node_->create_publisher<cognitao_ros2::msg::EventMsg>("/wme/in", 1000);    
 
-    //
-    // TODO Wrong usage probably
-    //
-    // event_sub_ = g_node_->create_subscription<cognitao_ros2::msg::EventMsg>("/wme/in", 
-    //         std::bind(&Ros2DataSource::onDataSourceEvent, this,_1));
-
-
+    event_sub_ = g_node_->create_subscription<cognitao_ros2::msg::EventMsg>(
+      "/wme/in", 1000, std::bind(&Ros2DataSource::onDataSourceEvent, this, _1));
+ 
+    
     spinThread_ = std::thread(&Ros2DataSource::doSpin, this);
     spinThread_.detach();
 }
@@ -75,8 +71,6 @@ bool Ros2DataSource::publishUpdateEvent(const string &name, const string &value)
     eventMsg.key = name;
 
     eventMsg.value = value;
-
-    cout << "publish msg " << eventMsg.key << ", " << eventMsg.value << endl;
 
     event_pub_->publish(eventMsg);
 

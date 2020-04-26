@@ -43,6 +43,9 @@
 #include <rclcpp/rclcpp.hpp>
 #include <cognitao_ros2/msg/event_msg.hpp>
 #include <cognitao/data_sources/DataSource.h>
+
+#include "std_msgs/msg/string.hpp"
+
 // #include <cognitao/CogniTao.h>
 
 using namespace std;

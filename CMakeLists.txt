@@ -15,11 +15,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-
-
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# find_package(action_manager REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(action_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
@@ -29,7 +26,6 @@ find_package(rclcpp_action REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_runtime REQUIRED)
 find_package(cognitao REQUIRED)
-
 
 
 rosidl_generate_interfaces(${PROJECT_NAME}
@@ -93,10 +89,6 @@ target_link_libraries(cognitao_ros2_shared
   CogniTao::cognitao_core
 )
 
-install(TARGETS
-  cognitao_ros2_shared
-  DESTINATION /usr/lib/cognitao/plugins/
-)
 
 
 add_executable(action_server_example 
@@ -130,16 +122,11 @@ ament_target_dependencies(action_server_example
 
 target_link_libraries(action_server_example ${rclcpp_LIBRARIES} ${rmw_connext_cpp_LIBRARIES} ${std_interfaces})
 
-# install(TARGETS action_server_example
-#   DESTINATION lib/${PROJECT_NAME})
+install(TARGETS action_server_example
+  DESTINATION lib/${PROJECT_NAME})
 
 
 
-
-
-
-#
-#
 
 
 

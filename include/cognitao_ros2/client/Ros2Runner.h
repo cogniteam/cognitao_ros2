@@ -48,9 +48,10 @@
 
 
 using actionType =cognitao_ros2:: action::ActionMsg;
+using GoalHandleActionType = rclcpp_action::ClientGoalHandle<actionType>;
+    using namespace std::placeholders;
 
 using namespace std;
-
 
 /**
  * Allows to receive data, manage callback and publish da
@@ -61,15 +62,11 @@ class Ros2Runner : public Runner{
 public:
 
     Ros2Runner();
-
-    Ros2Runner(const string &action, map<string, string> parameters);
-
-    virtual ~Ros2Runner() {
-        
-    }
+    ~Ros2Runner();
 
 public:
 
+    virtual void setAction(const std::string &action);
     /**
      * @brief execute task
      * @return bool 
@@ -77,27 +74,27 @@ public:
     virtual bool run() override;
 
     /**
-     * @brief stop executing task 
-     */
-    virtual void stop() override;
-
-   /**
      * @brief Gets the Type
      * @return std::string 
      */
-    virtual std::string getType() override;  
+    virtual std::string getType() override; 
+
+    /**
+     * @brief stop executing task 
+     */
+    virtual void stop() override; 
+   
 
 private:
 
-    atomic<bool> stopRequested;
-    
-    bool success_;
+    atomic<bool> stopRequested;    
 
     rclcpp::Node::SharedPtr g_node_ = nullptr;
 
-    rclcpp_action::Client<actionType>::SharedPtr action_client;
+    rclcpp_action::Client<actionType>::SharedPtr client_;
 
     rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goal_handle = nullptr;
+
 };
 
 #endif /* INCLUDE_ROS2_RUNNER_H_ */
