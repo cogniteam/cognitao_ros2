@@ -57,13 +57,20 @@ using namespace std;
 class Ros2DataSource :public DataSource{
 
 public:
-
+    /**
+     * @brief Construct a new Ros 2 Data Source object
+     */
     Ros2DataSource();
-
+    /**
+     * @brief Destroys the Ros 2 Data Source object
+     */
     virtual ~Ros2DataSource(){};
 
 public:
-
+    /**
+     * @brief create ros2 data source
+     * @return DataSource::Ptr 
+     */
     static DataSource::Ptr create(){
         return DataSource::Ptr(new Ros2DataSource());
     }
@@ -75,7 +82,7 @@ protected:
      * @return bool
      */
     virtual bool publishUpdateEvent(const string &name,
-                                    const string &value);
+        const string &value);
 
     /**
      * @brief updates the world model

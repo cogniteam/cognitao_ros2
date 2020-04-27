@@ -60,12 +60,19 @@ class Ros2Runner : public Runner{
 
 
 public:
-
+    /**
+     * @brief Construct a new Ros 2 Runner object
+     */
     Ros2Runner();
+    /**
+     * @brief Destroys the Ros 2 Runner object
+     */
     ~Ros2Runner();
 
 public:
-
+    /**
+     * @brief set the action
+     */
     virtual void setAction(const std::string &action);
     /**
      * @brief execute task
@@ -93,7 +100,7 @@ private:
 
     rclcpp_action::Client<actionType>::SharedPtr client_;
 
-    rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goal_handle = nullptr;
+    rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goal_handle =nullptr;
 
 };
 

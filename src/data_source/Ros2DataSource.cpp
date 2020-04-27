@@ -46,7 +46,6 @@ using namespace std;
 
 Ros2DataSource::Ros2DataSource(){
 
-
     if (!rclcpp::ok()){
         rclcpp::init(0, nullptr);
     }
@@ -57,8 +56,8 @@ Ros2DataSource::Ros2DataSource(){
         g_node_->create_publisher<cognitao_ros2::msg::Event>("/wme/in", 1000);    
 
     event_sub_ = g_node_->create_subscription<cognitao_ros2::msg::Event>(
-      "/wme/in", 1000, std::bind(&Ros2DataSource::onDataSourceEvent, this, _1));
- 
+        "/wme/in",
+        1000, std::bind(&Ros2DataSource::onDataSourceEvent, this, _1)); 
     
     spinThread_ = std::thread(&Ros2DataSource::doSpin, this);
     spinThread_.detach();
@@ -81,9 +80,7 @@ void Ros2DataSource::onDataSourceEvent(const cognitao_ros2::msg::Event::SharedPt
     DataSource::variableUpdated(msg->key, msg->value);
 }
 
-
 void Ros2DataSource::doSpin(){
 	 
-	rclcpp::spin(g_node_);
-	
+	rclcpp::spin(g_node_);	
 }

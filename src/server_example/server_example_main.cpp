@@ -2,7 +2,10 @@
 
 #include <cognitao_ros2/server_example/Ros2ActionWaitServer.h>
 
-
+/**
+ * @brief 
+ * @param argv argv[1] is the name of the action (ros2 runner)
+ */
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);

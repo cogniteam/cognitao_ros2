@@ -47,50 +47,51 @@ using GoalHandleActionType = rclcpp_action::ServerGoalHandle<actionType>;
 using namespace std::placeholders;
 
 
-class Ros2ActionServer
-{
+class Ros2ActionServer {
 public: 
-
-  Ros2ActionServer(rclcpp::Node::SharedPtr node, std::string action) {
+  /**
+   * @brief Construct a new Ros 2 Action Server object
+   * @param node 
+   * @param action 
+   */
+  Ros2ActionServer(rclcpp::Node::SharedPtr node, const std::string action) {
 
     g_node_ = node;
 
     this->server_ = rclcpp_action::create_server<actionType>(
-      g_node_,
-      action,
-      std::bind(&Ros2ActionServer::handle_goal, this, std::placeholders::_1, std::placeholders::_2),
-      std::bind(&Ros2ActionServer::handle_cancel, this, std::placeholders::_1),
-      std::bind(&Ros2ActionServer::onStart, this, std::placeholders::_1)
-      );
-      RCLCPP_INFO(g_node_->get_logger(), "init server");
+        g_node_, action, std::bind(&Ros2ActionServer::handleGoal, 
+        this, std::placeholders::_1, std::placeholders::_2),
+        std::bind(&Ros2ActionServer::handleCancel, this, std::placeholders::_1),
+        std::bind(&Ros2ActionServer::onStart, this, std::placeholders::_1) );      
   }
-
-  virtual ~Ros2ActionServer(){};
-  
+  /**
+   * @brief Destroys the Ros 2 Action Server object
+   */
+  virtual ~Ros2ActionServer(){};  
 
 private:
 
-  rclcpp_action::GoalResponse handle_goal(
-    const std::array<uint8_t, 16> & uuid,
-    std::shared_ptr<const actionType::Goal> goal) {
-    (void)uuid;
-    
-    string action  = goal->goal.actiontype;
-    RCLCPP_INFO(g_node_->get_logger(), "Received goal request with action %s", action);
+  rclcpp_action::GoalResponse handleGoal(
+      const std::array<uint8_t, 16> &,
+      std::shared_ptr<const actionType::Goal> ) {   
+
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
   }
 
-  rclcpp_action::CancelResponse handle_cancel(
-    const std::shared_ptr<GoalHandleActionType> goal_handle)
-  {
-    RCLCPP_INFO(g_node_->get_logger(), "Received request to cancel goal");
-    (void)goal_handle;
+  rclcpp_action::CancelResponse handleCancel(
+      const std::shared_ptr<GoalHandleActionType> ) {  
+
     return rclcpp_action::CancelResponse::ACCEPT;
   }
 
-  virtual void execute(Ros2ActionContext ros2ActionContext) = 0;
-  
-  virtual void onStart(const std::shared_ptr<GoalHandleActionType> goal_handle) = 0;
+  void onStart(const std::shared_ptr<GoalHandleActionType> goal_handle) {      
+    
+    Ros2ActionContext ros2ActionContext(goal_handle);    
+    std::thread{std::bind(&Ros2ActionServer::execute, this, _1), 
+        ros2ActionContext}.detach();
+  } 
+
+  virtual void execute(Ros2ActionContext ros2ActionContext) = 0;  
 
 private:
     rclcpp::Node::SharedPtr g_node_ = nullptr;

@@ -46,31 +46,42 @@ using namespace std::placeholders;
 class Ros2ActionContext {
   
 public:
-
-  Ros2ActionContext (const std::shared_ptr<GoalHandleActionType> goal_handle){
+  /**
+   * @brief Construct a new Ros 2 Action Context object
+   * @param goal_handle 
+   */
+  Ros2ActionContext(const std::shared_ptr<GoalHandleActionType> goal_handle){
     goal_handle_ = goal_handle; 
 
-    const auto goal = goal_handle_->get_goal();   
+    std::shared_ptr<const actionType::Goal> goal = goal_handle_->get_goal();   
 
     for (auto const& param : goal->goal.parameters){
       parameters_[param.key] = param.val;      
     }
 
   }
-
+   /**
+    * @brief Gets the Parameters
+    * @return std::map<std::string, std::string> 
+    */
   std::map<std::string, std::string> getParameters() const{
-      return parameters_;
+    return parameters_;
   }
-
+  /**
+   * @brief Gets the Goal Handle
+   * @return std::shared_ptr<GoalHandleActionType> 
+   */
   std::shared_ptr<GoalHandleActionType> getGoalHandle() const{
     return goal_handle_;
   }
-
+  /**
+   * @brief Sets the Result
+   * @param resultVal 
+   */
   void setResult(bool resultVal) {
     auto result = std::make_shared<actionType::Result>(); 
     result->resultvalue = resultVal;
     goal_handle_->succeed(result);
-
   }
 
 private:

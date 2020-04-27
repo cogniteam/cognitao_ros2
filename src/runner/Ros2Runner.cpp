@@ -50,18 +50,16 @@ void Ros2Runner::setAction(const std::string &action){
 
    action_ = action;
    g_node_ = rclcpp::Node::make_shared(action_);
-   RCLCPP_INFO(g_node_->get_logger(), "set action");
    client_ = rclcpp_action::create_client<actionType>(g_node_,action_);
 }
 
  bool Ros2Runner::run(){ 
 
   if (!this->client_) {
-    RCLCPP_ERROR(g_node_->get_logger(), "Action client not initialized");
+    return false;
   }
 
   if (!this->client_->wait_for_action_server(std::chrono::seconds(10))) {
-    RCLCPP_ERROR(g_node_->get_logger(), "Action server not available after waiting");
     return false;
   }
 
@@ -76,29 +74,24 @@ void Ros2Runner::setAction(const std::string &action){
       goal_msg.goal.parameters.push_back(param);
   }
 
-  RCLCPP_INFO(g_node_->get_logger(), "Sending goal");
   // Ask server to achieve some goal and wait until it's accepted
   
   auto goal_handle_future = client_->async_send_goal(goal_msg);
 
   if (rclcpp::spin_until_future_complete(g_node_, goal_handle_future) !=
       rclcpp::executor::FutureReturnCode::SUCCESS) {
-      RCLCPP_ERROR(g_node_->get_logger(), "send goal call failed :(");
       stop(); 
       return false;
   }
 
   rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goal_handle = goal_handle_future.get();
   if (!goal_handle) {
-      RCLCPP_ERROR(g_node_->get_logger(), "Goal was rejected by server");
       stop(); 
       return false;
   }
 
   // Wait for the server to be done with the goal
   auto result_future = client_->async_get_result(goal_handle);
-
-  RCLCPP_INFO(g_node_->get_logger(), "Waiting for result");
 
   while(rclcpp::ok()){
 
@@ -107,7 +100,6 @@ void Ros2Runner::setAction(const std::string &action){
 
     // canceled or ctrl+c
     if (stopRequested == true){
-        RCLCPP_INFO(g_node_->get_logger(), "sending cancel to the server ...");
         auto cancel_result_future = client_->async_cancel_goal(goal_handle);
         if (rclcpp::spin_until_future_complete(g_node_, cancel_result_future) !=
             rclcpp::executor::FutureReturnCode::SUCCESS) {
@@ -123,14 +115,11 @@ void Ros2Runner::setAction(const std::string &action){
     if (wait_result == rclcpp::executor::FutureReturnCode::SUCCESS){
       ///get true or false from the server
       rclcpp_action::ClientGoalHandle<actionType>::WrappedResult wrapped_result
-       = result_future.get();
-      RCLCPP_INFO(g_node_->get_logger(), "FINISHED");
+           = result_future.get();
       stop();
       return wrapped_result.result->resultvalue;     
-    }  
-    
+    }      
   }
-
 
   stop(); 
   return false;

@@ -52,7 +52,6 @@ extern "C" Runner *create_runner(){
 
 extern "C" void destroy_runner(Runner *object){
 
-
   delete object;
 
 }
