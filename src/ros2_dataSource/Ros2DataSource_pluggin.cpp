@@ -52,6 +52,6 @@ extern "C" void destroy_datasource(DataSource* object) {
 
 extern "C" const char* get_datasource_type() {
     
-  return "shared_ros2_datasource";
+  return "ros2";
 }
 
