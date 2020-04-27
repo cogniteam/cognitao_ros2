@@ -75,6 +75,8 @@ private:
     std::shared_ptr<const actionType::Goal> goal) {
     (void)uuid;
     
+    string action  = goal->goal.actiontype;
+    RCLCPP_INFO(g_node_->get_logger(), "Received goal request with action %s", action);
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
   }
 
