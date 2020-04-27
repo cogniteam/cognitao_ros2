@@ -38,8 +38,8 @@
 #include <future>
 #include <iostream>
 
-#include "cognitao_ros2/action/action_msg.hpp"
-#include <cognitao_ros2/msg/event_msg.hpp>
+#include "cognitao_ros2/action/action.hpp"
+#include <cognitao_ros2/msg/event.hpp>
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "rclcpp/rclcpp.hpp"
 
@@ -47,7 +47,7 @@
 #include <cognitao/CogniTao.h>
 
 
-using actionType =cognitao_ros2:: action::ActionMsg;
+using actionType =cognitao_ros2:: action::Action;
 using GoalHandleActionType = rclcpp_action::ClientGoalHandle<actionType>;
     using namespace std::placeholders;
 

@@ -41,7 +41,7 @@
 
 #include <cognitao/CogniTao.h>
 #include <rclcpp/rclcpp.hpp>
-#include <cognitao_ros2/msg/event_msg.hpp>
+#include <cognitao_ros2/msg/event.hpp>
 #include <cognitao/data_sources/DataSource.h>
 
 #include "std_msgs/msg/string.hpp"
@@ -81,16 +81,16 @@ protected:
      * @brief updates the world model
      * @return bool
      */
-    void  onDataSourceEvent(const cognitao_ros2::msg::EventMsg::SharedPtr msg);
+    void  onDataSourceEvent(const cognitao_ros2::msg::Event::SharedPtr msg);
 
     void doSpin();
 
 
 private:
 
-    rclcpp::Subscription<cognitao_ros2::msg::EventMsg>::SharedPtr event_sub_;
+    rclcpp::Subscription<cognitao_ros2::msg::Event>::SharedPtr event_sub_;
 
-	rclcpp::Publisher<cognitao_ros2::msg::EventMsg>::SharedPtr event_pub_;
+	rclcpp::Publisher<cognitao_ros2::msg::Event>::SharedPtr event_pub_;
 
 	std::thread spinThread_;
 

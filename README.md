@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/cognitao_ros2_header.png"><br><br>
+  <img src="/ros.jpeg"><br><br>
 </div>
 
 -----------------
@@ -9,12 +9,11 @@ Decision making system implementation interface and proxy for ROS.
 
 For more information about CogniTAO decision making system see-[https://github.com/cogniteam/cognitao] 
 
-- [COGNITAO_ROS](#cognitaoros)
-  - [Getting atarted](#getting-atarted)
-  - [Integration](#integration)
-  - [Prerequisites](#prerequisites)
-  - [RosDataSource](#rosdatasource)
-  - [Contributing](#contributing)
+- [Getting Started](#getting-started)
+- [Integration](#integration)
+- [Prerequisites](#prerequisites)
+- [RosDataSource](#send\geT-events)
+- [Contributing](#contributing)
 ## Getting atarted
 First, create your own workspace.
 The next step is to download the project into the src directory.
@@ -66,13 +65,13 @@ The RosDataSource object listens to a topic called "/wme/out".
 When someone publishes an event to this topic, the RosDataSource gets the message and sets the key-value parameters.
 To publish via terminal:
 ```
-rostopic pub /wme/in dm_ros/EventMsg '{key: COIN, value: ENT}'
+rostopic pub /wme/in dm_ros/Event '{key: COIN, value: ENT}'
 ```
 ** Publish COIN event
 The setVar() method publishes to a topic called "/wme/in".
-The kind of the messages is EventMsg.
+The kind of the messages is Event.
 
-EventMsg:
+Event:
 This message has two fields- both sting type.
 The first field called- key, the second- value.
 ```

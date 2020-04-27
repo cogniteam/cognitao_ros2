@@ -36,7 +36,7 @@
  */
 
 
-#include <cognitao_ros2/client/Ros2Runner.h>
+#include <cognitao_ros2/runner/Ros2Runner.h>
 
 
 extern "C" Runner *create_runner(){
@@ -54,7 +54,6 @@ extern "C" void destroy_runner(Runner *object){
 
 
   delete object;
-  //  rclcpp::shutdown();
 
 }
 

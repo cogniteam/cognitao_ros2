@@ -36,14 +36,14 @@
  */
 
 
-#include <cognitao_ros2/client/Ros2Runner.h>
+#include <cognitao_ros2/runner/Ros2Runner.h>
 
 Ros2Runner::Ros2Runner(){
   stopRequested = false;
 }
 
 Ros2Runner::~Ros2Runner(){
-  rclcpp::shutdown(); 
+  
 }
 
 void Ros2Runner::setAction(const std::string &action){
@@ -70,7 +70,7 @@ void Ros2Runner::setAction(const std::string &action){
 
   goal_msg.goal.actiontype = action_;
   for (auto const &x : parameters_) {
-      cognitao_ros2::msg::KeyValMsg param;
+      cognitao_ros2::msg::KeyValue param;
       param.key = x.first;
       param.val = x.second;
       goal_msg.goal.parameters.push_back(param);

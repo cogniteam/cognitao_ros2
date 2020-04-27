@@ -29,14 +29,12 @@ find_package(cognitao REQUIRED)
 
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/EventMsg.msg"
-  "msg/KeyValMsg.msg"
-  "msg/GoalMsg.msg"
-  "action/ActionMsg.action"
+  "msg/Event.msg"
+  "msg/KeyValue.msg"
+  "msg/Goal.msg"
+  "action/Action.action"
   DEPENDENCIES builtin_interfaces action_msgs
 )
-
-
 
 #colcon build
 
@@ -57,10 +55,10 @@ get_rmw_typesupport(typesupport_impls "${rmw_implementation}" LANGUAGE "cpp")
 
 
 add_library(cognitao_ros2_shared SHARED 
-  src/client/Ros2Runner.cpp
-  src/client/Ros2RunnerPlugin.cpp
-  src/ros2_dataSource/Ros2DataSource.cpp
-  src/ros2_dataSource/Ros2DataSource_pluggin.cpp
+  src/runner/Ros2Runner.cpp
+  src/runner/Ros2RunnerPlugin.cpp
+  src/data_source/Ros2DataSource.cpp
+  src/data_source/Ros2DataSource_pluggin.cpp
 )
 
 # 1 - Includes generated messages directories and local include/ dir
@@ -89,6 +87,10 @@ target_link_libraries(cognitao_ros2_shared
   CogniTao::cognitao_core
 )
 
+install(TARGETS
+  cognitao_ros2_shared
+  DESTINATION /usr/lib/cognitao/plugins/
+)
 
 
 add_executable(action_server_example 
@@ -122,11 +124,8 @@ ament_target_dependencies(action_server_example
 
 target_link_libraries(action_server_example ${rclcpp_LIBRARIES} ${rmw_connext_cpp_LIBRARIES} ${std_interfaces})
 
-install(TARGETS action_server_example
-  DESTINATION lib/${PROJECT_NAME})
-
-
-
+#install(TARGETS action_server_example
+#  DESTINATION lib/${PROJECT_NAME})
 
 
 
