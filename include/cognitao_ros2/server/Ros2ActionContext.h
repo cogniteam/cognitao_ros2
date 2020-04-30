@@ -50,7 +50,7 @@ public:
    * @brief Construct a new Ros 2 Action Context object
    * @param goal_handle 
    */
-  Ros2ActionContext(const std::shared_ptr<GoalHandleActionType> goal_handle){
+  Ros2ActionContext(const std::shared_ptr<GoalHandleActionType> goal_handle = nullptr){
     goal_handle_ = goal_handle; 
 
     std::shared_ptr<const actionType::Goal> goal = goal_handle_->get_goal();   
@@ -82,6 +82,12 @@ public:
     auto result = std::make_shared<actionType::Result>(); 
     result->resultvalue = resultVal;
     goal_handle_->succeed(result);
+  }
+
+  void canceled(){
+    auto result = std::make_shared<actionType::Result>(); 
+    result->resultvalue = false;
+    goal_handle_->canceled(result);
   }
 
 private:

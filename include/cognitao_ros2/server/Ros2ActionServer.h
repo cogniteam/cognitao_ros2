@@ -41,6 +41,7 @@
 #include "Ros2ActionContext.h"
 
 
+
 using namespace std;
 using actionType=cognitao_ros2::action::Action;
 using GoalHandleActionType = rclcpp_action::ServerGoalHandle<actionType>;
@@ -62,7 +63,8 @@ public:
         g_node_, action, std::bind(&Ros2ActionServer::handleGoal, 
         this, std::placeholders::_1, std::placeholders::_2),
         std::bind(&Ros2ActionServer::handleCancel, this, std::placeholders::_1),
-        std::bind(&Ros2ActionServer::onStart, this, std::placeholders::_1) );      
+        std::bind(&Ros2ActionServer::onStart, this, std::placeholders::_1) ); 
+
   }
   /**
    * @brief Destroys the Ros 2 Action Server object
@@ -74,13 +76,12 @@ private:
   rclcpp_action::GoalResponse handleGoal(
       const std::array<uint8_t, 16> &,
       std::shared_ptr<const actionType::Goal> ) {   
-
+       
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
   }
 
   rclcpp_action::CancelResponse handleCancel(
       const std::shared_ptr<GoalHandleActionType> ) {  
-
     return rclcpp_action::CancelResponse::ACCEPT;
   }
 

@@ -104,9 +104,9 @@ void Ros2Runner::setAction(const std::string &action){
         if (rclcpp::spin_until_future_complete(g_node_, cancel_result_future) !=
             rclcpp::executor::FutureReturnCode::SUCCESS) {
             RCLCPP_ERROR(g_node_->get_logger(), "failed to cancel goal");
+            stop();
             return false;
         }
-
         stop();
         return false;
     }  

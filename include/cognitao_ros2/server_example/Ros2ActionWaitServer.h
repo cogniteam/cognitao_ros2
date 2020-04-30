@@ -45,6 +45,7 @@
 
 using namespace std;
 
+
 class Ros2ActionWaitServer: public Ros2ActionServer {
 
 public:
@@ -64,27 +65,35 @@ public:
 private:
 
   virtual void execute(Ros2ActionContext ros2ActionContext) override {
-
+    
     rclcpp::Rate loop_rate(1);
 
     int totalLoop =  atoi(ros2ActionContext.getParameters()["time"].c_str());
 
     for(int i = 0; i <  totalLoop; i++){
-      //cout<<i<<endl;
-      loop_rate.sleep();
+        cout<<i<<endl;
+        loop_rate.sleep();
 
-      //cancel goal
-      if (ros2ActionContext.getGoalHandle()->is_canceling()) {             
-        ros2ActionContext.setResult(false);
-        return;
-      }
+        //cancel goal
+        if (ros2ActionContext.getGoalHandle()->is_canceling() ) {             
+            ros2ActionContext.canceled();            
+            return;
+        }      
+
     }  
 
     // Check if goal is done
     if (rclcpp::ok()) {
-      ros2ActionContext.setResult(true);
-    }     
-  }   
+        ros2ActionContext.setResult(true);
+    } else {
+        ros2ActionContext.setResult(false);
+    } 
+
+    
+  } 
+
+ 
+
   
 };
 
