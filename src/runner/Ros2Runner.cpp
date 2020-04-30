@@ -48,13 +48,14 @@ Ros2Runner::~Ros2Runner(){
 
 void Ros2Runner::setAction(const std::string &action){
 
-   action_ = action;
-   g_node_ = rclcpp::Node::make_shared(action_);
-   client_ = rclcpp_action::create_client<actionType>(g_node_,action_);
+   Runner::setAction(action);
+   g_node_ = rclcpp::Node::make_shared(action);
+   client_ = rclcpp_action::create_client<actionType>(g_node_,action);
 }
 
  bool Ros2Runner::run(){ 
 
+  
   if (!this->client_) {
     return false;
   }
@@ -66,8 +67,8 @@ void Ros2Runner::setAction(const std::string &action){
   // Populate a goal
   auto goal_msg = actionType::Goal();        
 
-  goal_msg.goal.actiontype = action_;
-  for (auto const &x : parameters_) {
+  goal_msg.goal.actiontype = getAction();
+  for (auto const &x : getParameters()) {
       cognitao_ros2::msg::KeyValue param;
       param.key = x.first;
       param.val = x.second;
@@ -84,7 +85,8 @@ void Ros2Runner::setAction(const std::string &action){
       return false;
   }
 
-  rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goal_handle = goal_handle_future.get();
+  rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goal_handle = 
+      goal_handle_future.get();
   if (!goal_handle) {
       stop(); 
       return false;

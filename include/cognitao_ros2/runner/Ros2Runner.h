@@ -73,7 +73,7 @@ public:
     /**
      * @brief set the action
      */
-    virtual void setAction(const std::string &action);
+    virtual void setAction(const std::string &action) override;
     /**
      * @brief execute task
      * @return bool 
