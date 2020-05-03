@@ -98,7 +98,7 @@ void Ros2Runner::setAction(const std::string &action){
   while(rclcpp::ok()){
 
     auto wait_result = rclcpp::spin_until_future_complete(g_node_, 
-        result_future, std::chrono::seconds(1));
+        result_future, std::chrono::milliseconds(1));
 
     // canceled or ctrl+c
     if (stopRequested == true){
@@ -109,6 +109,8 @@ void Ros2Runner::setAction(const std::string &action){
             stop();
             return false;
         }
+        
+        RCLCPP_INFO(g_node_->get_logger(), "goal canceled");
         stop();
         return false;
     }  
@@ -118,9 +120,16 @@ void Ros2Runner::setAction(const std::string &action){
       ///get true or false from the server
       rclcpp_action::ClientGoalHandle<actionType>::WrappedResult wrapped_result
            = result_future.get();
+      RCLCPP_INFO(g_node_->get_logger(), "goal done successfully");
       stop();
       return wrapped_result.result->resultvalue;     
-    }      
+    } 
+    ///The server stopped working 
+    if (!client_->wait_for_action_server(std::chrono::milliseconds(1))){
+        RCLCPP_INFO(g_node_->get_logger(), "server stopped working");
+        stop();
+        return false;
+    } 
   }
 
   stop(); 
@@ -136,5 +145,6 @@ void Ros2Runner::stop(){
 std::string Ros2Runner::getType(){    
   return "ros2";
 }
+
 
 
