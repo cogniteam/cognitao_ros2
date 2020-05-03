@@ -87,10 +87,18 @@ target_link_libraries(cognitao_ros2_shared
   CogniTao::cognitao_core
 )
 
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
 install(TARGETS
   cognitao_ros2_shared
   DESTINATION /usr/lib/cognitao/plugins/
+  INCLUDES DESTINATION include
 )
+
+
 
 #install(TARGETS action_server_example
 #  DESTINATION lib/${PROJECT_NAME})

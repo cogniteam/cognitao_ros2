@@ -5,7 +5,7 @@
 -----------------
 
 # COGNITAO_ROS
-Decision making system implementation interface and proxy for ROS.
+Decision making system implementation interface and proxy for ROS2.
 
 For more information about CogniTAO decision making system see-[https://github.com/cogniteam/cognitao] 
 
