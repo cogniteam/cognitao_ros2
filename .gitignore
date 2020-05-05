@@ -1,0 +1,8 @@
+cognitao.git
+cognitao.git/*
+
+build/
+
+install/
+
+log/
