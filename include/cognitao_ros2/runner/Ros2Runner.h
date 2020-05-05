@@ -90,7 +90,6 @@ public:
      * @brief stop executing task 
      */
     virtual void stop() override; 
-   
 
 private:
 
@@ -103,5 +102,6 @@ private:
     rclcpp_action::ClientGoalHandle<actionType>::SharedPtr goalHandle_;
 
 };
+
 
 #endif /* INCLUDE_ROS2_RUNNER_H_ */

@@ -1,7 +1,7 @@
 
 variables:
   APT_REPOSITORY: "cognitao"
-  DEPEND_PACKAGES: "cognitao"
+  DEPEND_PACKAGES: "cognitao ros-ROS_DISTRO-rclcpp-action"
   DEPLOY_CLOUD: "true"
   BUILD_ELOQUENT: "true"
   

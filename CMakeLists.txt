@@ -67,7 +67,6 @@ target_include_directories(cognitao_ros2_shared
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
-
 #
 
 foreach(typesupport_impl ${typesupport_impls})
