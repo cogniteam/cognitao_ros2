@@ -58,6 +58,6 @@ extern "C" void destroy_runner(Runner *object){
 
 extern "C" const char *get_runner_type(){
 
-  return "ros2_runner";
+  return "ros2";
 }
 
