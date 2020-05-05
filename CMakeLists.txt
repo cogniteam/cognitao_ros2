@@ -18,13 +18,8 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-# find_package(action_msgs REQUIRED)
-# find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-# find_package(rosidl_typesupport_cpp REQUIRED)
-# find_package(rosidl_default_runtime REQUIRED)
 find_package(rclcpp_action REQUIRED)
-# find_package(builtin_interfaces REQUIRED)
 find_package(cognitao REQUIRED)
 
 
@@ -36,23 +31,13 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   DEPENDENCIES action_msgs
 )
 
-#colcon build
-
+#
 # Build
 #
 
-#
-# Compile all your code (data sources / runners / etc) in this single library
-#
-
-
-#
-# Used to include generated messages/actions by this package
-#
-get_default_rmw_implementation(rmw_implementation)
-find_package("${rmw_implementation}" REQUIRED)
-get_rmw_typesupport(typesupport_impls "${rmw_implementation}" LANGUAGE "cpp")
-
+include_directories(
+  include
+)
 
 add_library(cognitao_ros2_shared SHARED 
   src/runner/Ros2Runner.cpp
@@ -61,13 +46,12 @@ add_library(cognitao_ros2_shared SHARED
   src/data_source/Ros2DataSource_pluggin.cpp
 )
 
-# 1 - Includes generated messages directories and local include/ dir
-target_include_directories(cognitao_ros2_shared 
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
 #
+# Used to include generated messages/actions by this package
+#
+get_default_rmw_implementation(rmw_implementation)
+find_package("${rmw_implementation}" REQUIRED)
+get_rmw_typesupport(typesupport_impls "${rmw_implementation}" LANGUAGE "cpp")
 
 foreach(typesupport_impl ${typesupport_impls})
   rosidl_target_interfaces(cognitao_ros2_shared
@@ -100,7 +84,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-# ament_export_dependencies(rosidl_default_runtime)
 ament_export_dependencies(rclcpp_action)
 
 ament_package()
