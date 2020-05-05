@@ -1,6 +1,7 @@
 <div align="center">
-  <img src="/ros.jpeg"><br><br>
+  <img src="/assets/cognitao_ros2_header.png"><br><br>
 </div>
+
 
 -----------------
 
