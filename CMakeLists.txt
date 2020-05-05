@@ -18,13 +18,13 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(action_msgs REQUIRED)
+# find_package(action_msgs REQUIRED)
+# find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(rosidl_typesupport_cpp REQUIRED)
+# find_package(rosidl_typesupport_cpp REQUIRED)
+# find_package(rosidl_default_runtime REQUIRED)
 find_package(rclcpp_action REQUIRED)
-find_package(builtin_interfaces REQUIRED)
-find_package(rosidl_default_runtime REQUIRED)
+# find_package(builtin_interfaces REQUIRED)
 find_package(cognitao REQUIRED)
 
 
@@ -33,7 +33,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/KeyValue.msg"
   "msg/Goal.msg"
   "action/Action.action"
-  DEPENDENCIES builtin_interfaces action_msgs
+  DEPENDENCIES action_msgs
 )
 
 #colcon build
@@ -79,7 +79,6 @@ endforeach()
 
 ament_target_dependencies(cognitao_ros2_shared 
   rclcpp
-  std_msgs
   rclcpp_action
 )
 
@@ -99,16 +98,11 @@ install(TARGETS
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
- 
   ament_lint_auto_find_test_dependencies()
 endif()
 
-
-ament_export_dependencies(
-  rosidl_default_runtime
-)
-
-ament_export_dependencies(rosidl_default_runtime)
+# ament_export_dependencies(rosidl_default_runtime)
+ament_export_dependencies(rclcpp_action)
 
 ament_package()
 
