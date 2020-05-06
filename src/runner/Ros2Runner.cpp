@@ -133,7 +133,7 @@ bool Ros2Runner::run() {
         if (!client_->wait_for_action_server(std::chrono::milliseconds(1))){
             RCLCPP_INFO(nodeHandle_->get_logger(), "server stopped working");
             stop();
-            return false;
+            throw CogniTAOException("Remote actionlib task cannot be executed, Server stopped working");
         } 
     }
 
