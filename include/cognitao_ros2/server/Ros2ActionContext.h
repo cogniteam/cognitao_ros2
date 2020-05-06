@@ -84,10 +84,25 @@ public:
     goal_handle_->succeed(result);
   }
 
-  void canceled(){
+  /**
+   * @brief set result false and cancel goal 
+   * 
+   */
+  void cancelGoal(){
     auto result = std::make_shared<actionType::Result>(); 
     result->resultvalue = false;
     goal_handle_->canceled(result);
+  }
+
+  /**
+   * @brief goal is preempted
+   * 
+   * @return true 
+   * @return false 
+   */
+  bool isPreemptRequested()
+  {
+      return getGoalHandle()->is_canceling();
   }
 
 private:
